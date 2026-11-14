@@ -41,6 +41,7 @@ type Action =
   | { type: "patch-investor"; email: string; recipe: (draft: InvestorDraft) => InvestorDraft }
   | { type: "add-action"; action: Interaction }
   | { type: "set-status"; action: Interaction }
+  | { type: "clear-relation"; startupId: string; investorEmail: string }
   | { type: "add-note"; note: Note };
 
 function reducer(state: Database, action: Action): Database {
@@ -92,6 +93,18 @@ function reducer(state: Database, action: Action): Database {
           ),
         ],
       };
+    case "clear-relation":
+      return {
+        ...state,
+        actions: state.actions.filter(
+          (item) =>
+            !(
+              item.startupId === action.startupId &&
+              item.investorEmail === action.investorEmail &&
+              item.type !== "view"
+            ),
+        ),
+      };
     case "add-note":
       return { ...state, notes: [...state.notes, action.note] };
     default:
@@ -113,6 +126,7 @@ interface StoreValue {
   updateInvestor: (recipe: (draft: InvestorDraft) => InvestorDraft) => void;
   recordView: (startupId: string) => void;
   setRelation: (startupId: string, type: Exclude<RelationType, "view">) => void;
+  clearRelation: (startupId: string) => void;
   relationFor: (startupId: string) => RelationType | null;
   addNote: (startupId: string, investorEmail: string, body: string) => void;
 }
@@ -246,6 +260,14 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
             type,
             at: new Date().toISOString(),
           },
+        });
+      },
+      clearRelation: (startupId) => {
+        if (!session || session.role !== "investor") return;
+        dispatch({
+          type: "clear-relation",
+          startupId,
+          investorEmail: session.email,
         });
       },
       relationFor: (startupId) => {

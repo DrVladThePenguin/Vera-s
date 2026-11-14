@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import { Check, Link2, X } from "lucide-react";
 import { matchScore, useCatalog } from "@/components/app/catalog";
 import { Badge } from "@/components/ui/badge";
 import { INDUSTRIES, STAGES } from "@/lib/types";
@@ -87,29 +88,76 @@ export function DiscoverList() {
   );
 }
 
-export function DecisionBar({ startupId }: { startupId: string }) {
+export function DecisionBar({ startupId, startupName }: { startupId: string; startupName?: string }) {
   const store = useStore();
   const current = store.relationFor(startupId);
-  const actions = [
-    ["interested", "Interested"],
-    ["passed", "Pass"],
-    ["connected", "Connect"],
-  ] as const;
+  const status =
+    current === "interested"
+      ? "Interested"
+      : current === "passed"
+        ? "Passed"
+        : current === "connected"
+          ? "Connected"
+          : "Not reviewed";
+
   return (
-    <div className="flex flex-wrap gap-2">
-      {actions.map(([type, label]) => (
-        <button
-          key={type}
-          type="button"
-          onClick={() => store.setRelation(startupId, type)}
+    <div className="flex flex-wrap items-center gap-2">
+      <span className="mr-1 inline-flex h-9 items-center gap-2 rounded-lg border border-border bg-white px-3 text-xs font-medium text-muted-foreground">
+        <span
           className={cn(
-            "h-10 rounded-xl border px-4 text-sm font-medium",
-            current === type ? "border-primary bg-primary text-primary-foreground" : "border-border bg-white",
+            "size-1.5 rounded-full",
+            current === "passed" ? "bg-border" : current ? "bg-primary" : "bg-muted-foreground/40",
           )}
+        />
+        {status}
+      </span>
+      <button
+        type="button"
+        aria-pressed={current === "interested"}
+        onClick={() => store.setRelation(startupId, "interested")}
+        className={cn(
+          "inline-flex h-9 items-center gap-1.5 rounded-lg px-3.5 text-sm font-medium transition-colors",
+          current === "interested"
+            ? "bg-primary text-primary-foreground"
+            : "border border-border bg-white text-foreground hover:bg-muted",
+        )}
+      >
+        <Check className="size-4" strokeWidth={2.5} />
+        Accept
+      </button>
+      <button
+        type="button"
+        aria-pressed={current === "passed"}
+        onClick={() => store.setRelation(startupId, "passed")}
+        className={cn(
+          "inline-flex h-9 items-center gap-1.5 rounded-lg px-3.5 text-sm font-medium transition-colors",
+          current === "passed"
+            ? "border border-border bg-muted text-foreground"
+            : "border border-border bg-white text-foreground hover:bg-muted",
+        )}
+      >
+        <X className="size-4 text-muted-foreground" strokeWidth={2.5} />
+        Pass
+      </button>
+      {current === "interested" ? (
+        <button
+          type="button"
+          onClick={() => store.setRelation(startupId, "connected")}
+          className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-border bg-white px-3.5 text-sm font-medium text-primary hover:bg-primary-soft"
         >
-          {label}
+          <Link2 className="size-3.5" />
+          Connect
         </button>
-      ))}
+      ) : null}
+      {current === "connected" ? (
+        <Link
+          href="/investor/connections"
+          className="inline-flex h-9 items-center rounded-lg px-2 text-sm font-medium text-primary hover:underline"
+        >
+          Open connection
+        </Link>
+      ) : null}
+      <span className="sr-only">{startupName ? `Decision for ${startupName}` : "Decision"}</span>
     </div>
   );
 }
