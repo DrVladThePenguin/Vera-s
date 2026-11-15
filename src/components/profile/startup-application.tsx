@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ArrowUpRight,
   ChevronDown,
@@ -9,20 +9,9 @@ import {
   Linkedin,
   Mail,
   MapPin,
-  TrendingUp,
 } from "lucide-react";
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
 import { PersonMark } from "@/components/onboarding/widgets";
 import { DemoFrame } from "@/components/profile/startup-profile";
-import { Badge } from "@/components/ui/badge";
 import type { PublicStartup, UploadedDoc } from "@/lib/types";
 import { cn, formatBytes } from "@/lib/utils";
 
@@ -47,29 +36,6 @@ const DOC_LABELS = {
   other: "Supporting document",
 };
 
-function compactNumber(value: number) {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    notation: "compact",
-    maximumFractionDigits: 1,
-  }).format(value);
-}
-
-function parseMoney(value: string) {
-  if (!value) return 0;
-  const cleaned = value.replace(/,/g, "").replace(/[^0-9.kmb]/gi, "");
-  const match = cleaned.match(/^([0-9.]+)([kmb]?)/i);
-  if (!match) return 0;
-  const amount = Number(match[1]);
-  if (!Number.isFinite(amount)) return 0;
-  const unit = match[2].toLowerCase();
-  if (unit === "k") return amount * 1_000;
-  if (unit === "m") return amount * 1_000_000;
-  if (unit === "b") return amount * 1_000_000_000;
-  return amount;
-}
-
 function parsePercent(value: string) {
   const match = value.match(/[0-9.]+/);
   if (!match) return null;
@@ -86,54 +52,42 @@ function splitMarketSize(value: string) {
   };
 }
 
-function StagePill({ startup }: { startup: PublicStartup }) {
+export function StartupApplicationHeader({ startup }: { startup: PublicStartup }) {
   const stage = startup.fundraising.notFundraising
     ? "Not fundraising"
     : startup.fundraising.stage;
-  if (!stage) return null;
-  return (
-    <Badge tone={startup.fundraising.notFundraising ? "neutral" : "soft"}>
-      {stage}
-    </Badge>
-  );
-}
-
-export function StartupApplicationHeader({ startup }: { startup: PublicStartup }) {
   const meta = [
+    stage,
     startup.location,
     startup.foundingYear ? `Founded ${startup.foundingYear}` : "",
     startup.employees ? `${startup.employees} people` : "",
   ].filter(Boolean);
 
   return (
-    <div className="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
+    <div className="flex flex-col gap-6 xl:flex-row xl:items-center xl:justify-between">
       <div className="flex min-w-0 items-start gap-4">
         {startup.logoUrl ? (
           <img
             src={startup.logoUrl}
             alt={`${startup.name} logo`}
-            className="size-14 shrink-0 rounded-xl border border-border object-cover sm:size-16"
+            width={64}
+            height={64}
+            className="size-14 shrink-0 rounded-lg border border-border object-cover sm:size-16"
           />
         ) : (
-          <span className="grid size-14 shrink-0 place-items-center rounded-xl bg-primary-soft text-xl font-semibold text-primary sm:size-16">
+          <span className="grid size-14 shrink-0 place-items-center rounded-lg border border-border bg-muted text-xl font-semibold text-foreground sm:size-16">
             {startup.name.slice(0, 1)}
           </span>
         )}
         <div className="min-w-0">
-          <div className="flex flex-wrap items-center gap-2.5">
-            <h2 className="text-2xl leading-tight font-semibold tracking-tight sm:text-[28px]">
-              {startup.name}
-            </h2>
-            <StagePill startup={startup} />
-          </div>
-          <p className="mt-2 hidden max-w-3xl text-sm leading-6 text-muted-foreground sm:block">
-            {startup.description || "The founder has not added a company description yet."}
-          </p>
+          <h2 className="text-[26px] leading-tight font-semibold tracking-[-0.02em] sm:text-[32px]">
+            {startup.name}
+          </h2>
           <p className="mt-2.5 flex flex-wrap gap-x-2 gap-y-1 text-xs leading-5 text-muted-foreground">
             {meta.map((item, index) => (
               <span key={item} className="inline-flex items-center gap-2">
                 {index > 0 ? <span aria-hidden className="size-1 rounded-full bg-border" /> : null}
-                {item}
+                <span className={index === 0 ? "font-medium text-foreground" : undefined}>{item}</span>
               </span>
             ))}
             {startup.website ? (
@@ -145,13 +99,13 @@ export function StartupApplicationHeader({ startup }: { startup: PublicStartup }
               >
                 <span aria-hidden className="size-1 rounded-full bg-border" />
                 {startup.website.replace(/^https?:\/\//, "").replace(/\/$/, "")}
-                <ArrowUpRight className="size-3" />
+                <ArrowUpRight className="size-3" aria-hidden="true" />
               </a>
             ) : null}
           </p>
         </div>
       </div>
-      <div className="flex shrink-0 items-center gap-3 self-start rounded-xl border border-border bg-muted/70 px-3.5 py-3 xl:self-center">
+      <div className="flex shrink-0 items-center gap-3 border-t border-border pt-4 xl:border-t-0 xl:border-l xl:pt-0 xl:pl-5">
         <PersonMark
           name={startup.founder.name}
           photo={startup.founder.photo}
@@ -159,7 +113,8 @@ export function StartupApplicationHeader({ startup }: { startup: PublicStartup }
           size={42}
         />
         <div className="min-w-0">
-          <p className="truncate text-sm font-medium">{startup.founder.name || "Founder"}</p>
+          <p className="text-[11px] text-muted-foreground">Founder</p>
+          <p className="mt-0.5 truncate text-sm font-medium">{startup.founder.name || "Founder"}</p>
           <p className="truncate text-xs text-muted-foreground">
             {[startup.founder.title, startup.founder.location].filter(Boolean).join(" · ") || "Founder"}
           </p>
@@ -186,28 +141,28 @@ function Section({
     <section
       id={id}
       aria-labelledby={`${id}-heading`}
-      className="scroll-mt-6 border-t border-border pt-8 first:border-t-0 first:pt-0"
+      className="scroll-mt-6 border-t border-border pt-7 first:border-t-0 first:pt-0"
     >
-      <div className="mb-5 flex items-start justify-between gap-3">
+      <div className="mb-5 flex items-start justify-between gap-4">
         <div className="flex items-baseline gap-3">
-          <span className="text-[10px] font-medium tracking-[0.16em] text-muted-foreground tabular-nums">
+          <span className="inline-flex h-6 min-w-8 shrink-0 items-center justify-center rounded-[4px] border border-border px-1.5 text-[10px] font-medium text-muted-foreground tabular-nums">
             {String(index + 1).padStart(2, "0")}
           </span>
-          <h2 id={`${id}-heading`} className="text-lg font-semibold tracking-tight sm:text-xl">
+          <h2 id={`${id}-heading`} className="text-[17px] font-semibold tracking-tight sm:text-xl">
             {title}
           </h2>
         </div>
         {action}
       </div>
-      {children}
+      <div className="sm:pl-11">{children}</div>
     </section>
   );
 }
 
 function Fact({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div className="rounded-xl border border-border bg-muted/50 px-3.5 py-3">
-      <p className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">{label}</p>
+    <div className="border-t border-border pt-2.5">
+      <p className="text-xs text-muted-foreground">{label}</p>
       <div className="mt-1.5 text-sm leading-5 font-medium text-foreground">{children}</div>
     </div>
   );
@@ -217,37 +172,32 @@ function Metric({
   label,
   value,
   kind,
-  icon,
 }: {
   label: string;
   value: string;
   kind?: string;
-  icon?: React.ReactNode;
 }) {
   if (!value) return null;
   return (
-    <div className="rounded-xl border border-border bg-white px-4 py-4">
-      <div className="flex items-center justify-between gap-2">
-        <p className="text-xs leading-4 text-muted-foreground">{label}</p>
-        {icon ? <span className="text-primary">{icon}</span> : null}
-      </div>
-      <p className="mt-2 text-2xl font-semibold tracking-tight">{value}</p>
-      {kind ? <p className="mt-1 text-[11px] font-medium tracking-wide text-primary uppercase">{kind}</p> : null}
+    <div className="border-t border-border pt-3">
+      <p className="text-xs leading-4 text-muted-foreground">{label}</p>
+      <p className="mt-2 text-[26px] leading-none font-semibold tracking-tight tabular-nums">{value}</p>
+      {kind ? <p className="mt-2 text-[11px] text-muted-foreground capitalize">{kind}</p> : null}
     </div>
   );
 }
 
 function EmptyNote({ children = "Not provided." }: { children?: React.ReactNode }) {
-  return <p className="text-sm leading-6 text-muted-foreground">{children}</p>;
+  return <p className="max-w-2xl text-sm leading-6 text-muted-foreground">{children}</p>;
 }
 
 function DocumentRow({ document }: { document: UploadedDoc }) {
   const label = DOC_LABELS[document.category] ?? "Document";
   return (
-    <li className="flex items-center justify-between gap-4 rounded-xl border border-border px-4 py-3">
+    <li className="flex items-center justify-between gap-4 border-t border-border py-3 first:border-t-0">
       <span className="flex min-w-0 items-center gap-3">
-        <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-primary-soft text-primary">
-          <FileText className="size-4" />
+        <span className="grid size-9 shrink-0 place-items-center rounded-md bg-muted text-muted-foreground">
+          <FileText className="size-4" aria-hidden="true" />
         </span>
         <span className="min-w-0">
           <span className="block truncate text-sm font-medium">{document.name}</span>
@@ -256,61 +206,10 @@ function DocumentRow({ document }: { document: UploadedDoc }) {
           </span>
         </span>
       </span>
-      <span className="shrink-0 text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
+      <span className="shrink-0 text-[11px] text-muted-foreground">
         {document.category === "pitch" ? "Deck" : "File"}
       </span>
     </li>
-  );
-}
-
-function RevenueChart({ startup }: { startup: PublicStartup }) {
-  const data = useMemo(() => {
-    return [
-      { name: "MRR", value: parseMoney(startup.traction.mrr), label: startup.traction.mrr },
-      { name: "ARR", value: parseMoney(startup.traction.arr), label: startup.traction.arr },
-    ].filter((item) => item.value > 0);
-  }, [startup.traction.arr, startup.traction.mrr]);
-
-  if (startup.traction.preRevenue) {
-    return (
-      <div className="grid h-full min-h-36 place-items-center rounded-xl border border-dashed border-border bg-muted/30 px-5 text-center">
-        <p className="max-w-xs text-sm leading-6 text-muted-foreground">
-          The company is pre-revenue. Revenue metrics will appear here when trading begins.
-        </p>
-      </div>
-    );
-  }
-
-  if (data.length === 0) {
-    return (
-      <div className="grid h-full min-h-36 place-items-center rounded-xl border border-dashed border-border bg-muted/30 px-5 text-center">
-        <p className="text-sm text-muted-foreground">Revenue figures have not been added.</p>
-      </div>
-    );
-  }
-
-  return (
-    <div className="h-40 w-full">
-      <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={data} layout="vertical" margin={{ top: 4, right: 12, bottom: 4, left: 0 }}>
-          <CartesianGrid stroke="#E8EAF0" horizontal={false} />
-          <XAxis type="number" hide />
-          <YAxis
-            type="category"
-            dataKey="name"
-            tick={{ fill: "#737373", fontSize: 12 }}
-            axisLine={false}
-            tickLine={false}
-            width={42}
-          />
-          <Tooltip
-            cursor={{ fill: "rgba(0,102,255,0.06)" }}
-            formatter={(value) => [compactNumber(Number(value)), "Revenue"]}
-          />
-          <Bar dataKey="value" fill="#0066FF" radius={[0, 6, 6, 0]} barSize={22} />
-        </BarChart>
-      </ResponsiveContainer>
-    </div>
   );
 }
 
@@ -352,28 +251,24 @@ export function StartupApplicationSections({
           {startup.description || "The founder has not added a company description yet."}
         </p>
         <div className="mt-5 grid grid-cols-2 gap-3 lg:grid-cols-4">
-          <Fact label="Founded">{startup.foundingYear || "—"}</Fact>
-          <Fact label="Team size">{startup.employees ? `${startup.employees} people` : "—"}</Fact>
-          <Fact label="Headquarters">{startup.location || "—"}</Fact>
-          <Fact label="Industry">{startup.industry || "—"}</Fact>
+          <Fact label="Founded">{startup.foundingYear || "Not provided"}</Fact>
+          <Fact label="Team size">{startup.employees ? `${startup.employees} people` : "Not provided"}</Fact>
+          <Fact label="Headquarters">{startup.location || "Not provided"}</Fact>
+          <Fact label="Industry">{startup.industry || "Not provided"}</Fact>
         </div>
       </Section>
 
       <Section id="problem" index={1} title="Problem" action={edit(4)}>
-        <div className="grid gap-4 md:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)]">
-          <div className="rounded-xl border border-border bg-muted/50 p-5">
-            <p className="text-[11px] font-medium tracking-[0.12em] text-muted-foreground uppercase">
-              The problem
-            </p>
-            <p className="mt-3 text-[15px] leading-7 font-medium text-foreground">
+        <div className="grid gap-6 md:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)]">
+          <div>
+            <p className="text-xs font-medium text-muted-foreground">The problem</p>
+            <p className="mt-2 text-lg leading-8 font-medium text-foreground">
               {startup.problem.problem || "Not provided."}
             </p>
           </div>
-          <div className="rounded-xl border border-border p-5">
-            <p className="text-[11px] font-medium tracking-[0.12em] text-muted-foreground uppercase">
-              Who experiences it
-            </p>
-            <p className="mt-3 text-sm leading-6 text-muted-foreground">
+          <div className="border-t border-border pt-5 md:border-t-0 md:border-l md:pt-0 md:pl-6">
+            <p className="text-xs font-medium text-muted-foreground">Who experiences it</p>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">
               {startup.problem.audience || "Not provided."}
             </p>
           </div>
@@ -384,9 +279,9 @@ export function StartupApplicationSections({
         <p className="max-w-3xl text-[16px] leading-7 text-foreground">
           {startup.problem.solution || "Not provided."}
         </p>
-        <div className="mt-5 border-l-2 border-primary pl-4 sm:pl-5">
-          <p className="text-[11px] font-medium tracking-[0.12em] text-primary uppercase">Why it wins</p>
-          <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
+        <div className="mt-6 border-t border-border pt-4">
+          <p className="text-xs font-medium text-muted-foreground">Why it wins</p>
+          <p className="mt-2 max-w-3xl text-sm leading-6 text-foreground">
             {startup.problem.differentiation || "Not provided."}
           </p>
         </div>
@@ -444,8 +339,8 @@ export function StartupApplicationSections({
 
       <Section id="market" index={4} title="Market opportunity" action={edit(6)}>
         <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
-          <div className="flex flex-col justify-between rounded-xl bg-foreground p-5 text-background">
-            <p className="text-[11px] font-medium tracking-[0.12em] text-background/60 uppercase">
+          <div className="flex flex-col justify-between rounded-lg bg-foreground p-5 text-background">
+            <p className="text-xs text-background/65">
               Reported market size
             </p>
             {marketSize.figure ? (
@@ -462,22 +357,22 @@ export function StartupApplicationSections({
             )}
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
-            <Fact label="Target market">{startup.market.targetMarket || "—"}</Fact>
-            <Fact label="Target customer">{startup.market.targetCustomer || "—"}</Fact>
-            <Fact label="Competitors">{startup.market.competitors || "—"}</Fact>
-            <Fact label="Advantage">{startup.market.advantage || "—"}</Fact>
+            <Fact label="Target market">{startup.market.targetMarket || "Not provided"}</Fact>
+            <Fact label="Target customer">{startup.market.targetCustomer || "Not provided"}</Fact>
+            <Fact label="Competitors">{startup.market.competitors || "Not provided"}</Fact>
+            <Fact label="Advantage">{startup.market.advantage || "Not provided"}</Fact>
           </div>
         </div>
       </Section>
 
       <Section id="model" index={5} title="Business model" action={edit(6)}>
         <div className="grid gap-3 sm:grid-cols-3">
-          <Fact label="Revenue model">{startup.market.revenueModel || "—"}</Fact>
-          <Fact label="Primary customer">{startup.market.targetCustomer || "—"}</Fact>
+          <Fact label="Revenue model">{startup.market.revenueModel || "Not provided"}</Fact>
+          <Fact label="Primary customer">{startup.market.targetCustomer || "Not provided"}</Fact>
           <Fact label="Preferred investors">
             {startup.fundraising.investorTypes.length
               ? startup.fundraising.investorTypes.join(", ")
-              : "—"}
+              : "Not provided"}
           </Fact>
         </div>
         {startup.market.notes ? (
@@ -487,10 +382,11 @@ export function StartupApplicationSections({
 
       <Section id="traction" index={6} title="Traction and performance" action={edit(7)}>
         {startup.traction.preRevenue || startup.traction.preLaunch ? (
-          <div className="mb-4 flex flex-wrap gap-2">
-            {startup.traction.preRevenue ? <Badge tone="soft">Pre-revenue</Badge> : null}
-            {startup.traction.preLaunch ? <Badge tone="soft">Pre-launch</Badge> : null}
-          </div>
+          <p className="mb-5 text-xs font-medium text-muted-foreground">
+            {[startup.traction.preRevenue ? "Pre-revenue" : "", startup.traction.preLaunch ? "Pre-launch" : ""]
+              .filter(Boolean)
+              .join(" · ")}
+          </p>
         ) : null}
         {hasTraction ? (
           <>
@@ -501,30 +397,27 @@ export function StartupApplicationSections({
                 label="Monthly growth"
                 value={startup.traction.growth}
                 kind={startup.traction.growthKind}
-                icon={<TrendingUp className="size-4" />}
               />
               <Metric label="Retention" value={startup.traction.retention} kind={startup.traction.retentionKind} />
             </div>
             {retention !== null ? (
-              <div className="mt-5 rounded-xl border border-border px-4 py-4">
+              <div className="mt-5 border-t border-border pt-4">
                 <div className="flex items-center justify-between gap-3 text-xs">
                   <span className="font-medium text-foreground">Customer retention</span>
-                  <span className="text-muted-foreground">{Math.min(100, retention)}%</span>
+                  <span className="text-muted-foreground tabular-nums">{Math.min(100, retention)}%</span>
                 </div>
                 <div className="mt-2.5 h-1.5 overflow-hidden rounded-full bg-muted">
                   <div
-                    className="h-full rounded-full bg-primary"
+                    className="h-full rounded-full bg-foreground"
                     style={{ width: `${Math.max(0, Math.min(100, retention))}%` }}
                   />
                 </div>
               </div>
             ) : null}
             {startup.traction.other ? (
-              <div className="mt-4 rounded-xl border border-border bg-muted/50 px-4 py-3.5">
-                <p className="text-[11px] font-medium tracking-[0.12em] text-muted-foreground uppercase">
-                  Other performance
-                </p>
-                <p className="mt-1.5 text-sm leading-6 text-foreground">{startup.traction.other}</p>
+              <div className="mt-5 border-t border-border pt-4">
+                <p className="text-xs font-medium text-muted-foreground">Other performance</p>
+                <p className="mt-2 text-sm leading-6 text-foreground">{startup.traction.other}</p>
               </div>
             ) : null}
           </>
@@ -534,32 +427,28 @@ export function StartupApplicationSections({
       </Section>
 
       <Section id="financials" index={7} title="Financial information" action={edit(7)}>
-        <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+          <div className="grid gap-4 sm:grid-cols-2">
             <Metric label="Monthly recurring revenue" value={startup.traction.mrr} kind={startup.traction.mrrKind} />
             <Metric label="Annual recurring revenue" value={startup.traction.arr} kind={startup.traction.arrKind} />
             <Metric label="Previously raised" value={startup.fundraising.previous} />
             <Metric label="Current target" value={startup.fundraising.target} />
           </div>
-          <div className="rounded-xl border border-border p-4">
-            <p className="text-[11px] font-medium tracking-[0.12em] text-muted-foreground uppercase">
-              Revenue run rate
-            </p>
-            <div className="mt-2">
-              <RevenueChart startup={startup} />
-            </div>
+          <div className="border-t border-border pt-5 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-6">
+            <p className="text-xs font-medium text-muted-foreground">Financial documents</p>
+            {financialDocuments.length > 0 ? (
+              <ul className="mt-2 flex flex-col">
+                {financialDocuments.map((document) => (
+                  <DocumentRow key={document.id} document={document} />
+                ))}
+              </ul>
+            ) : (
+              <p className="mt-3 text-sm leading-6 text-muted-foreground">
+                No financial statements uploaded.
+              </p>
+            )}
           </div>
         </div>
-        {financialDocuments.length > 0 ? (
-          <div className="mt-5">
-            <p className="mb-2.5 text-xs font-medium text-muted-foreground">Financial documents</p>
-            <ul className="flex flex-col gap-2">
-              {financialDocuments.map((document) => (
-                <DocumentRow key={document.id} document={document} />
-              ))}
-            </ul>
-          </div>
-        ) : null}
       </Section>
 
       <Section id="fundraising" index={8} title="Fundraising details" action={edit(8)}>
@@ -568,35 +457,25 @@ export function StartupApplicationSections({
         ) : (
           <>
             <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-              <Fact label="Stage">{stage || "—"}</Fact>
-              <Fact label="Previous round">{startup.fundraising.previous || "—"}</Fact>
-              <Fact label="Round target">{startup.fundraising.target || "—"}</Fact>
-              <Fact label="Desired cheque">{startup.fundraising.desired || "—"}</Fact>
+              <Fact label="Stage">{stage || "Not provided"}</Fact>
+              <Fact label="Previous round">{startup.fundraising.previous || "Not provided"}</Fact>
+              <Fact label="Round target">{startup.fundraising.target || "Not provided"}</Fact>
+              <Fact label="Desired cheque">{startup.fundraising.desired || "Not provided"}</Fact>
             </div>
-            <div className="mt-4 grid gap-4 lg:grid-cols-2">
-              <div className="rounded-xl border border-border p-4">
-                <p className="text-[11px] font-medium tracking-[0.12em] text-muted-foreground uppercase">
-                  Use of funds
-                </p>
+            <div className="mt-5 grid gap-6 lg:grid-cols-2">
+              <div className="border-t border-border pt-4">
+                <p className="text-xs font-medium text-muted-foreground">Use of funds</p>
                 <p className="mt-2 text-sm leading-6 text-foreground">
                   {startup.fundraising.useOfFunds || "Not provided."}
                 </p>
               </div>
-              <div className="rounded-xl border border-border p-4">
-                <p className="text-[11px] font-medium tracking-[0.12em] text-muted-foreground uppercase">
-                  Preferred investor types
+              <div className="border-t border-border pt-4">
+                <p className="text-xs font-medium text-muted-foreground">Preferred investor types</p>
+                <p className="mt-2 text-sm leading-6 text-foreground">
+                  {startup.fundraising.investorTypes.length
+                    ? startup.fundraising.investorTypes.join(", ")
+                    : "Not provided."}
                 </p>
-                <div className="mt-2 flex flex-wrap gap-2">
-                  {startup.fundraising.investorTypes.length ? (
-                    startup.fundraising.investorTypes.map((type) => (
-                      <Badge key={type} tone="soft">
-                        {type}
-                      </Badge>
-                    ))
-                  ) : (
-                    <p className="text-sm text-muted-foreground">Not provided.</p>
-                  )}
-                </div>
               </div>
             </div>
           </>
@@ -604,8 +483,8 @@ export function StartupApplicationSections({
       </Section>
 
       <Section id="team" index={9} title="Founding team" action={edit(9)}>
-        <div className="grid gap-3 md:grid-cols-2">
-          <div className="rounded-xl border border-border p-4">
+        <div className="grid gap-x-8 gap-y-6 md:grid-cols-2">
+          <div className="border-t border-border pt-4">
             <div className="flex items-start gap-3">
               <PersonMark
                 name={startup.founder.name}
@@ -624,13 +503,13 @@ export function StartupApplicationSections({
             <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1.5 text-xs text-muted-foreground">
               {startup.founder.location ? (
                 <span className="inline-flex items-center gap-1.5">
-                  <MapPin className="size-3.5" />
+                  <MapPin className="size-3.5" aria-hidden="true" />
                   {startup.founder.location}
                 </span>
               ) : null}
               {startup.founder.email ? (
                 <a href={`mailto:${startup.founder.email}`} className="inline-flex items-center gap-1.5 hover:text-foreground">
-                  <Mail className="size-3.5" />
+                  <Mail className="size-3.5" aria-hidden="true" />
                   Email
                 </a>
               ) : null}
@@ -641,14 +520,14 @@ export function StartupApplicationSections({
                   rel="noreferrer"
                   className="inline-flex items-center gap-1.5 hover:text-foreground"
                 >
-                  <Linkedin className="size-3.5" />
+                  <Linkedin className="size-3.5" aria-hidden="true" />
                   LinkedIn
                 </a>
               ) : null}
             </div>
           </div>
           {startup.team.map((member) => (
-            <div key={member.id} className="rounded-xl border border-border p-4">
+            <div key={member.id} className="border-t border-border pt-4">
               <div className="flex items-start gap-3">
                 <PersonMark
                   name={member.name}
@@ -671,16 +550,16 @@ export function StartupApplicationSections({
                   rel="noreferrer"
                   className="mt-3 inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground"
                 >
-                  <Linkedin className="size-3.5" />
+                  <Linkedin className="size-3.5" aria-hidden="true" />
                   LinkedIn
                 </a>
               ) : null}
             </div>
           ))}
           {startup.team.length === 0 ? (
-            <div className="rounded-xl border border-dashed border-border p-4">
-              <p className="text-sm text-muted-foreground">No additional team members listed.</p>
-            </div>
+            <p className="border-t border-border pt-4 text-sm text-muted-foreground">
+              No additional team members listed.
+            </p>
           ) : null}
         </div>
       </Section>
@@ -689,7 +568,7 @@ export function StartupApplicationSections({
         {startup.documents.length === 0 ? (
           <EmptyNote>No documents have been uploaded yet.</EmptyNote>
         ) : (
-          <ul className="flex flex-col gap-2">
+          <ul className="flex flex-col">
             {startup.documents.map((document) => (
               <DocumentRow key={document.id} document={document} />
             ))}
@@ -717,17 +596,18 @@ export function StartupToc({
         aria-expanded={open}
         aria-controls="startup-toc"
         onClick={() => setOpen((current) => !current)}
-        className="flex w-full items-center justify-between gap-3 rounded-lg border border-border bg-white px-3 py-2.5 text-left xl:hidden"
+        className="flex min-h-11 w-full items-center justify-between gap-3 rounded-lg border border-border bg-white px-3 py-2.5 text-left xl:hidden"
       >
         <span>
-          <span className="block text-[10px] font-medium tracking-[0.12em] text-muted-foreground uppercase">
-            Contents
-          </span>
+          <span className="block text-[11px] font-medium text-muted-foreground">Contents</span>
           <span className="mt-0.5 block text-sm font-medium">{activeLabel}</span>
         </span>
-        <ChevronDown className={cn("size-4 shrink-0 text-muted-foreground transition-transform", open && "rotate-180")} />
+        <ChevronDown
+          className={cn("size-4 shrink-0 text-muted-foreground transition-transform", open && "rotate-180")}
+          aria-hidden="true"
+        />
       </button>
-      <p className="hidden text-[10px] font-medium tracking-[0.14em] text-muted-foreground uppercase xl:block">
+      <p className="hidden text-xs font-medium text-muted-foreground xl:block">
         Contents
       </p>
       <nav
@@ -753,21 +633,22 @@ export function StartupToc({
                     }
                   }}
                   className={cn(
-                    "group flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-[13px] leading-5 transition-colors",
+                    "group flex items-center gap-3 rounded-md px-2 py-3 text-[13px] leading-5 transition-colors xl:py-1.5",
                     active
-                      ? "bg-primary-soft font-medium text-primary"
-                      : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                      ? "bg-muted font-medium text-foreground"
+                      : "text-muted-foreground hover:bg-muted/60 hover:text-foreground",
                   )}
                 >
                   <span
                     className={cn(
                       "text-[10px] tracking-wider tabular-nums",
-                      active ? "text-primary/70" : "text-muted-foreground/60",
+                      active ? "text-primary" : "text-muted-foreground",
                     )}
                   >
                     {String(index + 1).padStart(2, "0")}
                   </span>
-                  <span>{section.label}</span>
+                  <span className="min-w-0 flex-1">{section.label}</span>
+                  {active ? <span aria-hidden className="size-1 rounded-full bg-primary" /> : null}
                 </a>
               </li>
             );
@@ -825,7 +706,11 @@ export function StartupApplicationPanel({
 
   const navigate = (id: string) => {
     setActiveId(id);
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    document.getElementById(id)?.scrollIntoView({
+      behavior: reduceMotion ? "auto" : "smooth",
+      block: "start",
+    });
     window.history.replaceState(null, "", `#${id}`);
   };
 
@@ -840,7 +725,7 @@ export function StartupApplicationPanel({
         <StartupApplicationHeader startup={startup} />
       </header>
       <div className="grid xl:grid-cols-[minmax(0,1fr)_248px]">
-        <div className="order-2 min-w-0 px-5 py-8 sm:px-7 lg:order-1 lg:px-8">
+        <div className="order-2 min-w-0 px-5 py-8 sm:px-7 lg:px-8 xl:order-1">
           <StartupApplicationSections startup={startup} onEdit={onEdit} />
         </div>
         <aside className="order-1 border-b border-border bg-muted/40 xl:order-2 xl:border-b-0 xl:border-l">

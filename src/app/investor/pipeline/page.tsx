@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useCatalog } from "@/components/app/catalog";
 import { AppShell } from "@/components/app/shell";
-import { Badge } from "@/components/ui/badge";
 import { useStore } from "@/lib/store";
 import type { Interaction } from "@/lib/types";
 
@@ -65,34 +64,43 @@ function DecisionSection({
     <section className="rounded-2xl border border-border bg-white p-5">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <h2 className="text-sm font-medium">{title}</h2>
+          <h2 className="text-base font-semibold tracking-tight">{title}</h2>
           <p className="mt-1 text-xs leading-5 text-muted-foreground">{description}</p>
         </div>
-        <Badge tone="soft">{decisions.length}</Badge>
+        <span className="text-sm text-muted-foreground tabular-nums">{decisions.length}</span>
       </div>
       {decisions.length === 0 ? (
-        <p className="mt-5 rounded-xl border border-dashed border-border px-4 py-6 text-center text-sm text-muted-foreground">
-          Nothing here yet.
-        </p>
+        <p className="mt-5 text-sm text-muted-foreground">Nothing here yet.</p>
       ) : (
-        <ul className="mt-4 flex flex-col gap-2.5">
+        <ul className="mt-4 flex flex-col">
           {decisions.map((decision) => {
             const startup = catalog.find((item) => item.id === decision.startupId);
             return (
               <li
                 key={decision.id}
-                className="flex flex-col gap-3 rounded-xl border border-border px-4 py-3.5 sm:flex-row sm:items-center sm:justify-between"
+                className="flex flex-col gap-3 border-t border-border py-3.5 first:border-t-0 first:pt-0 sm:flex-row sm:items-center sm:justify-between"
               >
                 <div className="min-w-0">
-                  <p className="truncate font-medium">{startup?.name || "Startup"}</p>
+                  <Link
+                    href={`/investor/discover/${encodeURIComponent(decision.startupId)}`}
+                    className="truncate font-medium hover:underline"
+                  >
+                    {startup?.name || "Startup"}
+                  </Link>
                   <p className="mt-0.5 truncate text-sm text-muted-foreground">
                     {[startup?.industry, startup?.location].filter(Boolean).join(" · ") || "No longer available"}
                   </p>
                 </div>
-                <div className="flex shrink-0 items-center gap-3">
-                  <Badge tone={decision.type === "passed" ? "neutral" : "soft"}>
+                <div className="flex shrink-0 items-center gap-4">
+                  <span
+                    className={
+                      decision.type === "passed"
+                        ? "text-xs font-medium text-muted-foreground"
+                        : "text-xs font-medium text-foreground"
+                    }
+                  >
                     {decision.type === "connected" ? "Connected" : decision.type === "interested" ? "Interested" : "Passed"}
-                  </Badge>
+                  </span>
                   <Link
                     href={`/investor/discover/${encodeURIComponent(decision.startupId)}`}
                     className="text-sm font-medium text-primary"

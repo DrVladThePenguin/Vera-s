@@ -27,6 +27,9 @@ export function InvestorDashboard() {
 
   return (
     <div className="flex flex-col gap-4">
+      <p className="text-xs text-muted-foreground">
+        Charts show sample market data. Your decision counts are live.
+      </p>
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {metrics.map((metric) => (
           <article key={metric.label} className="rounded-2xl border border-border bg-white p-5">

@@ -4,7 +4,6 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { Check, Link2, X } from "lucide-react";
 import { matchScore, useCatalog } from "@/components/app/catalog";
-import { Badge } from "@/components/ui/badge";
 import { INDUSTRIES, STAGES } from "@/lib/types";
 import { useStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
@@ -31,57 +30,108 @@ export function DiscoverList() {
   return (
     <div className="flex flex-col gap-5">
       <div className="grid gap-3 sm:grid-cols-[1fr_180px_180px]">
-        <input
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
-          placeholder="Search startups"
-          className="h-12 rounded-xl border border-border bg-white px-3.5 text-[15px] outline-none focus:border-primary focus:ring-4 focus:ring-primary/15"
-        />
-        <select value={industry} onChange={(event) => setIndustry(event.target.value)} className="h-12 rounded-xl border border-border bg-white px-3 text-sm">
-          <option value="">All industries</option>
-          {INDUSTRIES.map((item) => (
-            <option key={item}>{item}</option>
-          ))}
-        </select>
-        <select value={stage} onChange={(event) => setStage(event.target.value)} className="h-12 rounded-xl border border-border bg-white px-3 text-sm">
-          <option value="">All stages</option>
-          {STAGES.map((item) => (
-            <option key={item}>{item}</option>
-          ))}
-        </select>
+        <label className="block">
+          <span className="mb-1.5 block text-xs font-medium text-muted-foreground">Search</span>
+          <input
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="Company name or keyword"
+            className="h-12 w-full rounded-xl border border-border bg-white px-3.5 text-[15px] outline-none focus:border-primary focus:ring-4 focus:ring-primary/15"
+          />
+        </label>
+        <label className="block">
+          <span className="mb-1.5 block text-xs font-medium text-muted-foreground">Industry</span>
+          <select
+            value={industry}
+            onChange={(event) => setIndustry(event.target.value)}
+            className="h-12 w-full rounded-xl border border-border bg-white px-3 text-sm"
+          >
+            <option value="">All industries</option>
+            {INDUSTRIES.map((item) => (
+              <option key={item}>{item}</option>
+            ))}
+          </select>
+        </label>
+        <label className="block">
+          <span className="mb-1.5 block text-xs font-medium text-muted-foreground">Stage</span>
+          <select
+            value={stage}
+            onChange={(event) => setStage(event.target.value)}
+            className="h-12 w-full rounded-xl border border-border bg-white px-3 text-sm"
+          >
+            <option value="">All stages</option>
+            {STAGES.map((item) => (
+              <option key={item}>{item}</option>
+            ))}
+          </select>
+        </label>
       </div>
       {startups.length === 0 ? (
         <div className="rounded-2xl border border-border bg-white px-6 py-12 text-center">
           <p className="font-medium">No startups match these filters.</p>
-          <p className="mt-2 text-sm text-muted-foreground">Clear a filter to see more of the market.</p>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Widen the industry or stage to see more of the market.
+          </p>
+          <button
+            type="button"
+            onClick={() => {
+              setQuery("");
+              setIndustry("");
+              setStage("");
+            }}
+            className="mt-5 inline-flex h-11 items-center rounded-lg border border-border px-4 text-sm font-medium hover:bg-muted sm:h-10"
+          >
+            Clear filters
+          </button>
         </div>
       ) : (
-        <div className="grid gap-4 lg:grid-cols-2">
-          {startups.map((startup) => {
-            const score = matchScore(startup, investor);
-            return (
-              <Link
-                key={startup.id}
-                href={`/investor/discover/${encodeURIComponent(startup.id)}`}
-                className="rounded-2xl border border-border bg-white p-5 hover:border-primary"
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <h2 className="text-lg font-semibold tracking-tight">{startup.name}</h2>
-                    <p className="mt-1 text-sm text-muted-foreground">
-                      {startup.location} · {startup.fundraising.notFundraising ? "Not fundraising" : startup.fundraising.stage}
+        <div className="overflow-hidden rounded-2xl border border-border bg-white">
+          <div className="hidden border-b border-border px-5 py-2.5 text-xs font-medium text-muted-foreground sm:grid sm:grid-cols-[minmax(0,1fr)_150px_100px] sm:gap-6">
+            <span>Company</span>
+            <span>Industry</span>
+            <span className="text-right">Raising</span>
+          </div>
+          <div className="divide-y divide-border">
+            {startups.map((startup) => {
+              const score = matchScore(startup, investor);
+              const stage = startup.fundraising.notFundraising
+                ? "Not fundraising"
+                : startup.fundraising.stage;
+              return (
+                <Link
+                  key={startup.id}
+                  href={`/investor/discover/${encodeURIComponent(startup.id)}`}
+                  className="grid gap-3 px-5 py-5 transition-colors hover:bg-muted/40 sm:grid-cols-[minmax(0,1fr)_150px_100px] sm:items-center sm:gap-6"
+                >
+                  <div className="min-w-0">
+                    <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                      <h2 className="text-lg font-semibold tracking-tight">{startup.name}</h2>
+                      {score >= 2 ? (
+                        <span className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+                          <span aria-hidden className="size-1 rounded-full bg-primary" />
+                          Matches your focus
+                        </span>
+                      ) : null}
+                    </div>
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      {[startup.location, stage].filter(Boolean).join(" · ")}
+                    </p>
+                    <p className="mt-2 line-clamp-2 max-w-2xl text-sm leading-6 text-muted-foreground">
+                      {startup.description}
+                    </p>
+                    <p className="mt-2 flex flex-wrap gap-x-4 text-xs text-muted-foreground sm:hidden">
+                      <span>{startup.industry}</span>
+                      {startup.fundraising.desired ? <span>{startup.fundraising.desired}</span> : null}
                     </p>
                   </div>
-                  {score >= 2 ? <Badge tone="soft">Matches your focus</Badge> : null}
-                </div>
-                <p className="mt-4 line-clamp-3 text-sm leading-6 text-muted-foreground">{startup.description}</p>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  <Badge tone="primary">{startup.industry}</Badge>
-                  {startup.fundraising.desired ? <Badge>{startup.fundraising.desired}</Badge> : null}
-                </div>
-              </Link>
-            );
-          })}
+                  <p className="hidden truncate text-sm sm:block">{startup.industry}</p>
+                  <p className="hidden text-right text-sm font-medium tabular-nums sm:block">
+                    {startup.fundraising.desired || "Not set"}
+                  </p>
+                </Link>
+              );
+            })}
+          </div>
         </div>
       )}
     </div>

@@ -59,9 +59,14 @@ export function FounderDashboard() {
 
   return (
     <div className="flex flex-col gap-4">
-      <p className="text-sm text-muted-foreground">
-        {founder?.company.name} · {founder?.company.industry}
-      </p>
+      <div>
+        <p className="text-sm text-muted-foreground">
+          {founder?.company.name} · {founder?.company.industry}
+        </p>
+        <p className="mt-1 text-xs text-muted-foreground">
+          Sample metrics include the investor activity saved on this device.
+        </p>
+      </div>
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {metrics.map((metric) => (
           <article key={metric.label} className="rounded-2xl border border-border bg-white p-5">

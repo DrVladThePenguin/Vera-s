@@ -16,7 +16,7 @@ export default function Page() {
       subtitle="Review startup applications. Accept to express interest, or pass to move on."
     >
       <div className="flex flex-col gap-5">
-        <div className="flex justify-end">
+        <div className="flex justify-start sm:justify-end">
           <div
             role="tablist"
             aria-label="Discovery view"
@@ -35,9 +35,9 @@ export default function Page() {
                 aria-selected={view === value}
                 onClick={() => setView(value)}
                 className={cn(
-                  "h-9 rounded-lg px-4 text-sm font-medium transition-colors",
+                  "h-11 rounded-lg px-4 text-sm font-medium transition-colors sm:h-9",
                   view === value
-                    ? "bg-primary-soft text-primary"
+                    ? "bg-foreground text-background"
                     : "text-muted-foreground hover:text-foreground",
                 )}
               >

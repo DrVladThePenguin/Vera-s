@@ -10,6 +10,10 @@ import { cn } from "@/lib/utils";
 
 type DecisionType = "interested" | "passed";
 
+function scrollBehavior(): ScrollBehavior {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
+}
+
 interface LastDecision {
   startupId: string;
   startupName: string;
@@ -57,7 +61,7 @@ export function DiscoveryReview({ onBrowse }: { onBrowse?: () => void }) {
       return;
     }
     if (previousId.current && previousId.current !== current.id) {
-      topRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      topRef.current?.scrollIntoView({ behavior: scrollBehavior(), block: "start" });
     }
     previousId.current = current.id;
   }, [current]);
@@ -94,7 +98,7 @@ export function DiscoveryReview({ onBrowse }: { onBrowse?: () => void }) {
     setLastDecision(null);
     setTransitioning(false);
     window.setTimeout(() => {
-      topRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      topRef.current?.scrollIntoView({ behavior: scrollBehavior(), block: "start" });
     }, 0);
   };
 
@@ -162,7 +166,7 @@ export function DiscoveryReview({ onBrowse }: { onBrowse?: () => void }) {
       </div>
 
       <div className="sticky bottom-4 z-30">
-        <div className="flex flex-col gap-3 rounded-2xl border border-border bg-white/95 p-3 shadow-[0_10px_30px_rgba(23,23,23,0.09)] backdrop-blur sm:flex-row sm:items-center sm:justify-between sm:px-4">
+        <div className="flex flex-col gap-3 rounded-xl border border-border bg-white p-3 shadow-[0_1px_2px_rgba(23,23,23,0.06)] sm:flex-row sm:items-center sm:justify-between sm:px-4">
           <div className="hidden min-w-0 px-1 sm:block sm:px-0">
             <p className="truncate text-sm font-medium">Reviewing {current.name}</p>
             <p className="mt-0.5 truncate text-xs text-muted-foreground">
@@ -175,9 +179,9 @@ export function DiscoveryReview({ onBrowse }: { onBrowse?: () => void }) {
               onClick={() => decide("interested")}
               disabled={transitioning}
               aria-label={`Accept ${current.name} and move it to Interested`}
-              className="inline-flex h-14 items-center justify-center gap-2 rounded-xl bg-primary px-5 text-[15px] font-semibold text-primary-foreground transition-all duration-150 hover:bg-[#0052CC] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/15 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-60 sm:min-w-[160px]"
+              className="inline-flex h-14 items-center justify-center gap-2 rounded-lg bg-primary px-5 text-[15px] font-semibold text-primary-foreground transition-all duration-150 hover:bg-[#0052CC] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/15 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-60 sm:min-w-[160px]"
             >
-              <Check className="size-5" strokeWidth={2.5} />
+              <Check className="size-5" strokeWidth={2.5} aria-hidden="true" />
               Accept
             </button>
             <button
@@ -185,9 +189,9 @@ export function DiscoveryReview({ onBrowse }: { onBrowse?: () => void }) {
               onClick={() => decide("passed")}
               disabled={transitioning}
               aria-label={`Pass on ${current.name} and move it to Passed`}
-              className="inline-flex h-14 items-center justify-center gap-2 rounded-xl border border-border bg-white px-5 text-[15px] font-semibold text-foreground transition-all duration-150 hover:bg-muted focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/15 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-60 sm:min-w-[160px]"
+              className="inline-flex h-14 items-center justify-center gap-2 rounded-lg border border-border bg-white px-5 text-[15px] font-semibold text-foreground transition-all duration-150 hover:bg-muted focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/15 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-60 sm:min-w-[160px]"
             >
-              <X className="size-5 text-muted-foreground" strokeWidth={2.5} />
+              <X className="size-5 text-muted-foreground" strokeWidth={2.5} aria-hidden="true" />
               Pass
             </button>
           </div>
@@ -221,7 +225,7 @@ function DecisionToast({
     <div className="pointer-events-none fixed inset-x-0 bottom-28 z-50 flex justify-center px-4 sm:bottom-28">
       <div
         role="status"
-        className="step-in pointer-events-auto flex max-w-[min(100%,32rem)] items-center gap-3 rounded-xl border border-border bg-white px-3.5 py-3 shadow-[0_12px_32px_rgba(23,23,23,0.14)]"
+        className="step-in pointer-events-auto flex max-w-[min(100%,32rem)] items-center gap-3 rounded-lg border border-border bg-white px-3.5 py-3 shadow-[0_6px_18px_rgba(23,23,23,0.10)]"
       >
         <span
           className={cn(
@@ -229,7 +233,7 @@ function DecisionToast({
             interested ? "bg-primary-soft text-primary" : "bg-muted text-muted-foreground",
           )}
         >
-          {interested ? <Check className="size-4" strokeWidth={2.5} /> : <X className="size-4" strokeWidth={2.5} />}
+          {interested ? <Check className="size-4" strokeWidth={2.5} aria-hidden="true" /> : <X className="size-4" strokeWidth={2.5} aria-hidden="true" />}
         </span>
         <p className="min-w-0 text-sm leading-5">
           <span className="font-medium">{decision.startupName}</span> moved to{" "}
@@ -238,18 +242,18 @@ function DecisionToast({
         <button
           type="button"
           onClick={onUndo}
-          className="inline-flex shrink-0 items-center gap-1.5 rounded-lg px-2 py-1.5 text-sm font-medium text-primary hover:bg-primary-soft focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/15"
+          className="inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-md px-2 py-1.5 text-sm font-medium text-primary hover:bg-primary-soft focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/15 sm:min-h-0"
         >
-          <Undo2 className="size-3.5" />
+          <Undo2 className="size-3.5" aria-hidden="true" />
           Undo
         </button>
         <button
           type="button"
           onClick={onDismiss}
           aria-label="Dismiss decision feedback"
-          className="grid size-7 shrink-0 place-items-center rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground"
+          className="grid size-11 shrink-0 place-items-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground sm:size-7"
         >
-          <X className="size-4" />
+          <X className="size-4" aria-hidden="true" />
         </button>
       </div>
     </div>

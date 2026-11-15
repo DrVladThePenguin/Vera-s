@@ -1,7 +1,6 @@
 "use client";
 
 import { AppShell } from "@/components/app/shell";
-import { Badge } from "@/components/ui/badge";
 import { MOCK_RELATIONS } from "@/lib/mock";
 import { useStore } from "@/lib/store";
 import { founderStartupId } from "@/lib/types";
@@ -71,6 +70,9 @@ export default function Page() {
 
   return (
     <AppShell role="founder" title="Investors" subtitle="Interest, passes, and introductions.">
+      <p className="mb-4 text-xs text-muted-foreground">
+        Sample investors appear alongside activity saved on this device.
+      </p>
       <div className="grid gap-5 xl:grid-cols-2">
         <RelationSection
           title="Accepted investors"
@@ -104,19 +106,17 @@ function RelationSection({
     <section className="rounded-2xl border border-border bg-white p-5">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <h2 className="text-sm font-medium">{title}</h2>
+          <h2 className="text-base font-semibold tracking-tight">{title}</h2>
           <p className="mt-1 text-xs leading-5 text-muted-foreground">{description}</p>
         </div>
-        <Badge tone="soft">{people.length}</Badge>
+        <span className="text-sm text-muted-foreground tabular-nums">{people.length}</span>
       </div>
       {people.length === 0 ? (
-        <p className="mt-5 rounded-xl border border-dashed border-border px-4 py-6 text-center text-sm text-muted-foreground">
-          {empty}
-        </p>
+        <p className="mt-5 text-sm text-muted-foreground">{empty}</p>
       ) : (
-        <ul className="mt-4 flex flex-col gap-2.5">
+        <ul className="mt-4 flex flex-col">
           {people.map((person) => (
-            <li key={person.id} className="rounded-xl border border-border px-4 py-3.5">
+            <li key={person.id} className="border-t border-border py-3.5 first:border-t-0 first:pt-0">
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                   <p className="truncate text-sm font-medium">{person.name}</p>
@@ -124,11 +124,17 @@ function RelationSection({
                     {[person.organisation, person.location].filter(Boolean).join(" · ")}
                   </p>
                 </div>
-                <Badge tone={person.type === "passed" ? "neutral" : "soft"}>
+                <span
+                  className={
+                    person.type === "passed"
+                      ? "text-xs font-medium text-muted-foreground"
+                      : "text-xs font-medium text-foreground"
+                  }
+                >
                   {LABELS[person.type] ?? person.type}
-                </Badge>
+                </span>
               </div>
-              <p className="mt-2.5 text-[11px] text-muted-foreground">{person.at}</p>
+              <p className="mt-2 text-[11px] text-muted-foreground">{person.at}</p>
             </li>
           ))}
         </ul>

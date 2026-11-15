@@ -73,7 +73,7 @@ export function AppShell({
             <p className="text-xs text-muted-foreground">{role === "founder" ? "Founder" : "Investor"}</p>
           </div>
         </div>
-        <nav className="flex gap-1 overflow-x-auto px-3 pb-3 lg:flex-1 lg:flex-col">
+        <nav className="flex gap-1 overflow-x-auto px-3 pb-3 [scrollbar-width:none] lg:flex-1 lg:flex-col [&::-webkit-scrollbar]:hidden">
           {NAV[role].map((item) => {
             const active =
               item.href === "/founder" || item.href === "/investor"
@@ -86,7 +86,7 @@ export function AppShell({
                 href={item.href}
                 className={cn(
                   "flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-medium whitespace-nowrap",
-                  active ? "bg-primary-soft text-primary" : "text-foreground hover:bg-muted",
+                  active ? "bg-primary-soft font-semibold text-primary" : "text-foreground hover:bg-muted",
                 )}
               >
                 <Icon size={16} />
@@ -110,13 +110,13 @@ export function AppShell({
           </button>
         </div>
       </aside>
-      <div className="px-4 py-6 sm:px-8 sm:py-8">
+      <main className="px-4 py-6 sm:px-8 sm:py-8">
         <header className="mb-8">
           <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
           {subtitle ? <p className="mt-1 text-sm text-muted-foreground">{subtitle}</p> : null}
         </header>
         {children}
-      </div>
+      </main>
     </div>
   );
 }

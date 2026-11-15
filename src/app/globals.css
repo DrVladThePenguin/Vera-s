@@ -5,11 +5,11 @@
   --foreground: #171717;
   --card: #ffffff;
   --muted: #f7f8fa;
-  --muted-foreground: #737373;
+  --muted-foreground: #6b6b6b;
   --border: #e8eaf0;
   --primary: #0066ff;
   --primary-foreground: #ffffff;
-  --primary-soft: #e8f1ff;
+  --primary-soft: #f2f7ff;
   --ring: #0066ff;
   --destructive: #b42318;
 }
@@ -35,6 +35,26 @@ body {
   font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
 }
 
+@layer base {
+  a[href],
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  select:not(:disabled),
+  summary {
+    cursor: pointer;
+  }
+
+  button:disabled,
+  [aria-disabled="true"] {
+    cursor: not-allowed;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+}
+
 @keyframes step-in {
   from {
     opacity: 0;
@@ -48,4 +68,15 @@ body {
 
 .step-in {
   animation: step-in 220ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
 }
