@@ -73,7 +73,10 @@ export function AppShell({
             <p className="text-xs text-muted-foreground">{role === "founder" ? "Founder" : "Investor"}</p>
           </div>
         </div>
-        <nav className="flex gap-1 overflow-x-auto px-3 pb-3 [scrollbar-width:none] lg:flex-1 lg:flex-col [&::-webkit-scrollbar]:hidden">
+        <nav
+          aria-label="Main"
+          className="flex gap-1 overflow-x-auto px-3 pb-3 [scrollbar-width:none] lg:flex-1 lg:flex-col [&::-webkit-scrollbar]:hidden"
+        >
           {NAV[role].map((item) => {
             const active =
               item.href === "/founder" || item.href === "/investor"

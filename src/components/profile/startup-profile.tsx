@@ -23,7 +23,7 @@ export function DemoFrame({ url, image }: { url?: string; image?: string }) {
       </div>
       <div className="flex aspect-video items-center justify-center bg-white">
         {image ? (
-          <img src={image} alt="" className="h-full w-full object-cover" />
+          <img src={image} alt="" width={1280} height={720} className="h-full w-full object-cover" />
         ) : (
           <p className="max-w-sm px-6 text-center text-sm leading-6 text-muted-foreground">
             {url

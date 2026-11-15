@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ArrowUpRight,
   ChevronDown,
@@ -56,6 +56,7 @@ export function StartupApplicationHeader({ startup }: { startup: PublicStartup }
   const stage = startup.fundraising.notFundraising
     ? "Not fundraising"
     : startup.fundraising.stage;
+  const sample = startup.id.startsWith("startup-");
   const meta = [
     stage,
     startup.location,
@@ -80,9 +81,14 @@ export function StartupApplicationHeader({ startup }: { startup: PublicStartup }
           </span>
         )}
         <div className="min-w-0">
-          <h2 className="text-[26px] leading-tight font-semibold tracking-[-0.02em] sm:text-[32px]">
-            {startup.name}
-          </h2>
+          <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+            <h2 className="text-[26px] leading-tight font-semibold tracking-[-0.02em] sm:text-[32px]">
+              {startup.name}
+            </h2>
+            {sample ? (
+              <span className="text-[11px] font-medium text-muted-foreground">Sample application</span>
+            ) : null}
+          </div>
           <p className="mt-2.5 flex flex-wrap gap-x-2 gap-y-1 text-xs leading-5 text-muted-foreground">
             {meta.map((item, index) => (
               <span key={item} className="inline-flex items-center gap-2">
@@ -330,6 +336,8 @@ export function StartupApplicationSections({
                 key={shot.id}
                 src={shot.dataUrl}
                 alt={shot.name}
+                width={1280}
+                height={720}
                 className="aspect-video w-full rounded-xl border border-border object-cover"
               />
             ))}
@@ -582,19 +590,30 @@ export function StartupApplicationSections({
 export function StartupToc({
   activeId,
   onNavigate,
+  id = "startup-toc",
 }: {
   activeId: string;
   onNavigate: (id: string) => void;
+  id?: string;
 }) {
   const [open, setOpen] = useState(false);
+  const toggleRef = useRef<HTMLButtonElement>(null);
   const activeLabel = APPLICATION_SECTIONS.find((section) => section.id === activeId)?.label ?? "Company overview";
 
   return (
-    <div>
+    <div
+      onKeyDown={(event) => {
+        if (event.key === "Escape" && open) {
+          setOpen(false);
+          toggleRef.current?.focus();
+        }
+      }}
+    >
       <button
+        ref={toggleRef}
         type="button"
         aria-expanded={open}
-        aria-controls="startup-toc"
+        aria-controls={id}
         onClick={() => setOpen((current) => !current)}
         className="flex min-h-11 w-full items-center justify-between gap-3 rounded-lg border border-border bg-white px-3 py-2.5 text-left xl:hidden"
       >
@@ -611,7 +630,7 @@ export function StartupToc({
         Contents
       </p>
       <nav
-        id="startup-toc"
+        id={id}
         aria-label="Application sections"
         className={cn("mt-3 xl:mt-4", open ? "block" : "hidden xl:block")}
       >
@@ -715,25 +734,25 @@ export function StartupApplicationPanel({
   };
 
   return (
-    <article
-      className={cn(
-        "overflow-hidden rounded-2xl border border-border bg-white shadow-[0_1px_2px_rgba(23,23,23,0.04)]",
-        className,
-      )}
-    >
-      <header className="border-b border-border px-5 py-5 sm:px-7 sm:py-6">
-        <StartupApplicationHeader startup={startup} />
-      </header>
-      <div className="grid xl:grid-cols-[minmax(0,1fr)_248px]">
-        <div className="order-2 min-w-0 px-5 py-8 sm:px-7 lg:px-8 xl:order-1">
-          <StartupApplicationSections startup={startup} onEdit={onEdit} />
-        </div>
-        <aside className="order-1 border-b border-border bg-muted/40 xl:order-2 xl:border-b-0 xl:border-l">
-          <div className="px-4 py-4 xl:sticky xl:top-6 xl:px-5 xl:py-6">
-            <StartupToc activeId={activeId} onNavigate={navigate} />
-          </div>
-        </aside>
+    <div className={className}>
+      <div className="mb-3 xl:hidden">
+        <StartupToc id="startup-toc-mobile" activeId={activeId} onNavigate={navigate} />
       </div>
-    </article>
+      <article className="overflow-hidden rounded-2xl border border-border bg-white shadow-[0_1px_2px_rgba(23,23,23,0.04)]">
+        <header className="border-b border-border px-5 py-5 sm:px-7 sm:py-6">
+          <StartupApplicationHeader startup={startup} />
+        </header>
+        <div className="grid xl:grid-cols-[minmax(0,1fr)_248px]">
+          <div className="min-w-0 px-5 py-8 sm:px-7 lg:px-8 xl:order-1">
+            <StartupApplicationSections startup={startup} onEdit={onEdit} />
+          </div>
+          <aside className="hidden border-l border-border bg-muted/40 xl:order-2 xl:block">
+            <div className="px-4 py-4 xl:sticky xl:top-6 xl:px-5 xl:py-6">
+              <StartupToc activeId={activeId} onNavigate={navigate} />
+            </div>
+          </aside>
+        </div>
+      </article>
+    </div>
   );
 }
