@@ -64,18 +64,18 @@ export function AppShell({
   const name = role === "founder" ? store.founder?.founder.fullName : store.investor?.fullName;
 
   return (
-    <div className="min-h-screen bg-muted lg:grid lg:grid-cols-[240px_1fr]">
-      <aside className="flex flex-col border-b border-border bg-white lg:min-h-screen lg:border-r lg:border-b-0">
-        <div className="flex items-center gap-3 px-5 py-5">
+    <div className="blueprint-surface min-h-screen lg:grid lg:grid-cols-[248px_1fr]">
+      <aside className="flex flex-col border-hairline border-b bg-white lg:min-h-screen lg:border-r lg:border-b-0">
+        <div className="blueprint-rail flex items-center gap-3 px-5 py-5">
           <Logo size={36} />
           <div>
-            <p className="text-sm font-semibold">VentureOS</p>
-            <p className="text-xs text-muted-foreground">{role === "founder" ? "Founder" : "Investor"}</p>
+            <p className="font-display text-sm font-bold">VentureOS</p>
+            <p className="text-meta mt-0.5">{role === "founder" ? "Founder workspace" : "Investor workspace"}</p>
           </div>
         </div>
         <nav
           aria-label="Main"
-          className="flex gap-1 overflow-x-auto px-3 pb-3 [scrollbar-width:none] lg:flex-1 lg:flex-col [&::-webkit-scrollbar]:hidden"
+          className="flex gap-0 overflow-x-auto px-2 py-3 [scrollbar-width:none] lg:flex-1 lg:flex-col [&::-webkit-scrollbar]:hidden"
         >
           {NAV[role].map((item) => {
             const active =
@@ -88,35 +88,38 @@ export function AppShell({
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-medium whitespace-nowrap",
-                  active ? "bg-primary-soft font-semibold text-primary" : "text-foreground hover:bg-muted",
+                  "flex items-center gap-2 rounded-none border border-transparent px-3 py-2.5 text-sm font-medium whitespace-nowrap",
+                  active
+                    ? "border-hairline border bg-primary-soft font-semibold text-primary"
+                    : "text-foreground hover:border-hairline hover:border hover:bg-muted",
                 )}
               >
-                <Icon size={16} />
+                <Icon size={16} strokeWidth={1.5} />
                 {item.label}
               </Link>
             );
           })}
         </nav>
-        <div className="flex items-center justify-between gap-3 px-3 py-4 lg:mt-auto">
-          <p className="truncate px-2 text-xs text-muted-foreground">{name || store.session.email}</p>
+        <div className="blueprint-rail flex items-center justify-between gap-3 px-3 py-4 lg:mt-auto">
+          <p className="truncate px-2 font-mono text-[10px] text-muted-foreground">{name || store.session.email}</p>
           <button
             type="button"
-            className="inline-flex h-10 items-center gap-2 rounded-xl px-3 text-sm hover:bg-muted"
+            className="inline-flex h-10 items-center gap-2 rounded-none border border-transparent px-3 text-sm hover:border-hairline hover:border hover:bg-muted"
             onClick={() => {
               store.signOut();
               router.push("/");
             }}
           >
-            <LogOut size={16} />
+            <LogOut size={16} strokeWidth={1.5} />
             Sign out
           </button>
         </div>
       </aside>
-      <main className="px-4 py-6 sm:px-8 sm:py-8">
-        <header className="mb-8">
-          <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
-          {subtitle ? <p className="mt-1 text-sm text-muted-foreground">{subtitle}</p> : null}
+      <main className="border-hairline border-transparent px-4 py-6 sm:px-8 sm:py-8 lg:border-l">
+        <header className="mb-8 border-hairline border-b pb-6">
+          <p className="text-meta mb-2">{role === "founder" ? "Founder" : "Investor"}</p>
+          <h1 className="text-2xl font-bold tracking-tight">{title}</h1>
+          {subtitle ? <p className="mt-2 font-mono text-xs text-muted-foreground">{subtitle}</p> : null}
         </header>
         {children}
       </main>

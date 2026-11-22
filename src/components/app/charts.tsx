@@ -19,8 +19,8 @@ const BLUE = ["#0066FF", "#3385FF", "#66A3FF", "#99C2FF", "#CCE0FF", "#171717"];
 
 export function ChartCard({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-2xl border border-border bg-white p-5">
-      <h2 className="mb-4 text-sm font-medium text-foreground">{title}</h2>
+    <section className="panel p-5">
+      <h2 className="text-meta mb-4 text-foreground normal-case">{title}</h2>
       <div className="h-64">{children}</div>
     </section>
   );

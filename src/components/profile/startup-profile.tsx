@@ -14,7 +14,7 @@ const DOC_LABELS = {
 
 export function DemoFrame({ url, image }: { url?: string; image?: string }) {
   return (
-    <div className="overflow-hidden rounded-xl border border-border bg-muted">
+    <div className="overflow-hidden panel-inset">
       <div className="flex items-center gap-2 border-b border-border bg-white px-3 py-2.5">
         <span className="size-2.5 rounded-full bg-border" />
         <span className="size-2.5 rounded-full bg-border" />
@@ -46,7 +46,7 @@ function Block({
   children: React.ReactNode;
 }) {
   return (
-    <section className="rounded-2xl border border-border bg-white p-6 sm:p-8">
+    <section className="panel p-6 sm:p-8">
       <div className="mb-5 flex items-center justify-between gap-3">
         <h2 className="text-lg font-semibold tracking-tight">{title}</h2>
         {action}
@@ -59,7 +59,7 @@ function Block({
 function Metric({ label, value, kind }: { label: string; value: string; kind?: string }) {
   if (!value) return null;
   return (
-    <div className="rounded-xl border border-border bg-muted px-4 py-3">
+    <div className="panel-inset px-4 py-3">
       <p className="text-xs text-muted-foreground">{label}</p>
       <p className="mt-1 text-lg font-semibold tracking-tight">{value}</p>
       {kind ? <p className="mt-1 text-xs text-primary capitalize">{kind}</p> : null}
@@ -87,12 +87,12 @@ export function StartupProfile({
 
   return (
     <div className="flex flex-col gap-4">
-      <section className="rounded-2xl border border-border bg-white p-6 sm:p-8">
+      <section className="panel p-6 sm:p-8">
         <div className="flex flex-col gap-5 sm:flex-row sm:items-start">
           {startup.logoUrl ? (
-            <img src={startup.logoUrl} alt="" className="size-16 rounded-xl object-cover" />
+            <img src={startup.logoUrl} alt="" className="size-16 rounded-none object-cover" />
           ) : (
-            <span className="grid size-16 place-items-center rounded-xl bg-primary-soft text-lg font-semibold text-primary">
+            <span className="grid size-16 place-items-center rounded-none border-hairline border bg-primary-soft text-lg font-semibold text-primary">
               {startup.name.slice(0, 1)}
             </span>
           )}
@@ -160,7 +160,7 @@ export function StartupProfile({
         {startup.product.screenshots.length > 1 ? (
           <div className="mt-3 grid grid-cols-3 gap-3">
             {startup.product.screenshots.slice(1).map((shot) => (
-              <img key={shot.id} src={shot.dataUrl} alt={shot.name} className="aspect-video w-full rounded-xl object-cover" />
+              <img key={shot.id} src={shot.dataUrl} alt={shot.name} className="aspect-video w-full rounded-none object-cover" />
             ))}
           </div>
         ) : null}
@@ -248,7 +248,7 @@ export function StartupProfile({
         ) : (
           <ul className="flex flex-col gap-2">
             {startup.documents.map((doc) => (
-              <li key={doc.id} className="flex items-center justify-between gap-3 rounded-xl border border-border px-4 py-3">
+              <li key={doc.id} className="flex items-center justify-between gap-3 rounded-none border-hairline border px-4 py-3">
                 <span>
                   <span className="block text-sm font-medium">{doc.name}</span>
                   <span className="text-xs text-muted-foreground">
@@ -296,7 +296,7 @@ export function FounderChecklist({
   return (
     <ul className="flex flex-col gap-2">
       {items.map((item) => (
-        <li key={item.label} className="flex items-center justify-between gap-3 rounded-xl border border-border px-4 py-3">
+        <li key={item.label} className="flex items-center justify-between gap-3 rounded-none border-hairline border px-4 py-3">
           <span className="flex items-center gap-3">
             <span className={`size-2.5 rounded-full ${item.done ? "bg-primary" : "bg-border"}`} />
             <span>

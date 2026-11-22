@@ -31,7 +31,7 @@ export default function Page() {
       {startup ? (
         <StartupApplicationPanel startup={startup} />
       ) : (
-        <div className="rounded-2xl border border-border bg-white px-6 py-12 text-center">
+        <div className="panel px-6 py-12 text-center">
           <p className="font-medium">This startup is no longer available.</p>
         </div>
       )}

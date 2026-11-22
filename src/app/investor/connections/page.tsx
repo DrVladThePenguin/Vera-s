@@ -16,7 +16,7 @@ export default function Page() {
   return (
     <AppShell role="investor" title="Connections" subtitle="Founders you have asked to meet.">
       {connections.length === 0 ? (
-        <div className="rounded-2xl border border-border bg-white px-6 py-12 text-center">
+        <div className="panel px-6 py-12 text-center">
           <p className="font-medium">No connections yet.</p>
           <p className="mt-2 text-sm text-muted-foreground">Connect from a startup profile to start a note.</p>
         </div>
@@ -55,12 +55,12 @@ function ConnectionCard({
   const [body, setBody] = useState("");
   const notes = store.db.notes.filter((note) => note.startupId === startupId && note.investorEmail === investorEmail);
   return (
-    <article className="rounded-2xl border border-border bg-white p-5">
+    <article className="panel p-5">
       <p className="font-medium">{title}</p>
       <p className="text-sm text-muted-foreground">{subtitle}</p>
       <ul className="mt-4 flex flex-col gap-3">
         {notes.map((note) => (
-          <li key={note.id} className="rounded-xl bg-muted px-4 py-3">
+          <li key={note.id} className="rounded-none bg-muted px-4 py-3">
             <p className="text-sm">{note.body}</p>
             <p className="mt-1 text-xs text-muted-foreground">
               {note.author === "investor" ? "You" : "Founder"} · {timeAgo(note.at)}

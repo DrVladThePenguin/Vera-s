@@ -105,7 +105,7 @@ export function DiscoveryReview({ onBrowse }: { onBrowse?: () => void }) {
   if (queue.length === 0 || !current) {
     return (
       <div ref={topRef} className="flex flex-col gap-4">
-        <div className="rounded-2xl border border-border bg-white px-6 py-16 text-center">
+        <div className="panel px-6 py-16 text-center">
           <span className="mx-auto grid size-12 place-items-center rounded-full bg-primary-soft text-primary">
             <CheckCircle2 className="size-6" />
           </span>
@@ -117,7 +117,7 @@ export function DiscoveryReview({ onBrowse }: { onBrowse?: () => void }) {
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
             <Link
               href="/investor/pipeline"
-              className="inline-flex h-10 items-center rounded-xl border border-border bg-white px-4 text-sm font-medium hover:bg-muted"
+              className="inline-flex h-10 items-center panel px-4 text-sm font-medium hover:bg-muted"
             >
               View pipeline
             </Link>
@@ -125,7 +125,7 @@ export function DiscoveryReview({ onBrowse }: { onBrowse?: () => void }) {
               <button
                 type="button"
                 onClick={onBrowse}
-                className="inline-flex h-10 items-center rounded-xl bg-primary px-4 text-sm font-medium text-primary-foreground hover:bg-[#0052CC]"
+                className="inline-flex h-10 items-center rounded-none bg-primary px-4 text-sm font-medium text-primary-foreground hover:bg-[#0052CC]"
               >
                 Browse all startups
               </button>
@@ -166,7 +166,7 @@ export function DiscoveryReview({ onBrowse }: { onBrowse?: () => void }) {
       </div>
 
       <div className="sticky bottom-4 z-30">
-        <div className="flex flex-col gap-3 rounded-xl border border-border bg-white p-3 shadow-[0_1px_2px_rgba(23,23,23,0.06)] sm:flex-row sm:items-center sm:justify-between sm:px-4">
+        <div className="flex flex-col gap-3 panel p-3  sm:flex-row sm:items-center sm:justify-between sm:px-4">
           <div className="hidden min-w-0 px-1 sm:block sm:px-0">
             <p className="truncate text-sm font-medium">Reviewing {current.name}</p>
             <p className="mt-0.5 truncate text-xs text-muted-foreground">
@@ -179,7 +179,7 @@ export function DiscoveryReview({ onBrowse }: { onBrowse?: () => void }) {
               onClick={() => decide("interested")}
               disabled={transitioning}
               aria-label={`Accept ${current.name} and move it to Interested`}
-              className="inline-flex h-14 items-center justify-center gap-2 rounded-lg bg-primary px-5 text-[15px] font-semibold text-primary-foreground transition-all duration-150 hover:bg-[#0052CC] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/15 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-60 sm:min-w-[160px]"
+              className="inline-flex h-14 items-center justify-center gap-2 rounded-none bg-primary px-5 text-[15px] font-semibold text-primary-foreground transition-all duration-150 hover:bg-[#0052CC] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/15 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-60 sm:min-w-[160px]"
             >
               <Check className="size-5" strokeWidth={2.5} aria-hidden="true" />
               Accept
@@ -189,7 +189,7 @@ export function DiscoveryReview({ onBrowse }: { onBrowse?: () => void }) {
               onClick={() => decide("passed")}
               disabled={transitioning}
               aria-label={`Pass on ${current.name} and move it to Passed`}
-              className="inline-flex h-14 items-center justify-center gap-2 rounded-lg border border-border bg-white px-5 text-[15px] font-semibold text-foreground transition-all duration-150 hover:bg-muted focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/15 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-60 sm:min-w-[160px]"
+              className="inline-flex h-14 items-center justify-center gap-2 rounded-none border-hairline border bg-white px-5 text-[15px] font-semibold text-foreground transition-all duration-150 hover:bg-muted focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/15 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-60 sm:min-w-[160px]"
             >
               <X className="size-5 text-muted-foreground" strokeWidth={2.5} aria-hidden="true" />
               Pass
@@ -225,7 +225,7 @@ function DecisionToast({
     <div className="pointer-events-none fixed inset-x-0 bottom-28 z-50 flex justify-center px-4 sm:bottom-28">
       <div
         role="status"
-        className="step-in pointer-events-auto flex max-w-[min(100%,32rem)] items-center gap-3 rounded-lg border border-border bg-white px-3.5 py-3 shadow-[0_6px_18px_rgba(23,23,23,0.10)]"
+        className="step-in pointer-events-auto flex max-w-[min(100%,32rem)] items-center gap-3 rounded-none border-hairline border bg-white px-3.5 py-3 shadow-[0_6px_18px_rgba(23,23,23,0.10)]"
       >
         <span
           className={cn(

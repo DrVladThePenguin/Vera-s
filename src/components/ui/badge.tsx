@@ -12,9 +12,9 @@ export function Badge({
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium",
-        tone === "primary" && "bg-primary text-primary-foreground",
-        tone === "soft" && "bg-primary-soft text-primary",
+        "inline-flex items-center rounded-none border border-hairline px-2 py-0.5 font-mono text-[10px] font-medium tracking-wide uppercase",
+        tone === "primary" && "border-primary bg-primary text-primary-foreground",
+        tone === "soft" && "border-primary/20 bg-primary-soft text-primary",
         tone === "neutral" && "bg-muted text-muted-foreground",
         className,
       )}

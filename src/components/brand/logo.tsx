@@ -29,8 +29,11 @@ export function Logo({
 
 export function BootScreen() {
   return (
-    <div className="grid min-h-screen place-items-center bg-muted">
-      <Logo size={56} />
+    <div className="blueprint-surface grid min-h-screen place-items-center px-4">
+      <div className="blueprint-frame flex size-28 items-center justify-center">
+        <Logo size={56} />
+      </div>
+      <p className="text-meta mt-4">Loading workspace</p>
     </div>
   );
 }

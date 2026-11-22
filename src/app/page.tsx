@@ -54,13 +54,16 @@ function HomeScreen() {
   }
 
   return (
-    <div className="grid min-h-screen place-items-center bg-muted px-4 py-12">
-      <div className="w-full max-w-xl rounded-2xl border border-border bg-white px-6 py-10 sm:px-10">
-        <Logo size={64} />
-        <h1 className="mt-8 text-[1.75rem] leading-tight font-semibold tracking-tight">
+    <div className="blueprint-surface grid min-h-screen place-items-center px-4 py-12">
+      <div className="panel w-full max-w-xl px-6 py-10 sm:px-10">
+        <div className="blueprint-frame mb-8 inline-flex size-20 items-center justify-center">
+          <Logo size={52} />
+        </div>
+        <p className="text-meta">{mode === "signin" ? "Session restore" : "Account setup"}</p>
+        <h1 className="mt-2 text-[1.75rem] leading-tight font-bold tracking-tight">
           {mode === "signin" ? "Sign in" : "Welcome to VentureOS"}
         </h1>
-        <p className="mt-3 text-[15px] leading-6 text-muted-foreground">
+        <p className="mt-3 font-mono text-xs leading-5 text-muted-foreground">
           {mode === "signin"
             ? "Use the email you started with. Your onboarding progress is saved on this device."
             : "Choose how you will use VentureOS. Founders and investors keep separate profiles."}
@@ -79,17 +82,17 @@ function HomeScreen() {
                 aria-pressed={role === value}
                 onClick={() => setRole(value)}
                 className={cn(
-                  "rounded-xl border px-4 py-4 text-left",
-                  role === value ? "border-primary bg-primary-soft" : "border-border hover:bg-muted",
+                  "rounded-none border px-4 py-4 text-left",
+                  role === value ? "border-primary bg-primary-soft" : "border-hairline hover:bg-muted",
                 )}
               >
-                <span className="block text-sm font-medium">{label}</span>
-                <span className="mt-1 block text-sm leading-5 text-muted-foreground">{copy}</span>
+                <span className="block text-sm font-bold">{label}</span>
+                <span className="mt-1 block font-mono text-[11px] leading-5 text-muted-foreground">{copy}</span>
               </button>
             ))}
           </div>
           <label className="flex flex-col gap-2 text-sm font-medium">
-            Email address
+            <span className="text-meta">Email address</span>
             <Input
               type="email"
               value={email}
@@ -101,10 +104,10 @@ function HomeScreen() {
               placeholder="you@company.com"
             />
           </label>
-          {error ? <p className="text-sm text-destructive">{error}</p> : null}
+          {error ? <p className="font-mono text-xs text-destructive">{error}</p> : null}
           <Button type="submit">{mode === "signin" ? "Sign in" : "Continue"}</Button>
         </form>
-        <p className="mt-6 text-sm text-muted-foreground">
+        <p className="mt-6 font-mono text-xs text-muted-foreground">
           {mode === "signin" ? "New to VentureOS?" : "Already have an account?"}{" "}
           <button
             type="button"

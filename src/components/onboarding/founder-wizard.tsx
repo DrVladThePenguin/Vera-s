@@ -232,7 +232,7 @@ export function FounderWizard() {
         </div>
       ) : null}
       {step === 12 ? (
-        <div className="rounded-xl bg-primary-soft px-5 py-4 text-sm leading-6 text-foreground">
+        <div className="rounded-none border-hairline border bg-primary-soft px-5 py-4 text-sm leading-6 text-foreground">
           <span className="font-medium">{draft.company.name || "Your startup"}</span> is saved on this device. The
           dashboard opens when you continue.
         </div>
@@ -329,11 +329,11 @@ function CompanyStep({
       <Field label="Company logo" hint="Optional. A square image works best.">
         <div className="flex items-center gap-4">
           {company.logoDataUrl ? (
-            <img src={company.logoDataUrl} alt="" className="size-16 rounded-xl object-cover" />
+            <img src={company.logoDataUrl} alt="" className="size-16 rounded-none object-cover" />
           ) : (
-            <span className="grid size-16 place-items-center rounded-xl border border-dashed border-border text-xs text-muted-foreground">Logo</span>
+            <span className="grid size-16 place-items-center blueprint-frame text-xs text-muted-foreground">Logo</span>
           )}
-          <label className="inline-flex h-10 cursor-pointer items-center rounded-xl border border-border px-3.5 text-sm font-medium hover:bg-muted">
+          <label className="inline-flex h-10 cursor-pointer items-center rounded-none border-hairline border px-3.5 text-sm font-medium hover:bg-muted">
             Upload logo
             <input
               type="file"
@@ -434,7 +434,7 @@ function ProductStep({
         </Field>
       </div>
       <Field label="Product screenshots" hint="Up to four images. These stay on this device.">
-        <label className="flex h-24 cursor-pointer items-center justify-center rounded-xl border border-dashed border-border text-sm text-muted-foreground hover:bg-muted">
+        <label className="flex h-24 cursor-pointer items-center justify-center blueprint-frame text-sm text-muted-foreground hover:bg-muted">
           Add screenshots
           <input
             type="file"
@@ -455,7 +455,7 @@ function ProductStep({
         {product.screenshots.length > 0 ? (
           <ul className="mt-3 grid gap-3 sm:grid-cols-2">
             {product.screenshots.map((shot) => (
-              <li key={shot.id} className="overflow-hidden rounded-xl border border-border">
+              <li key={shot.id} className="overflow-hidden rounded-none border-hairline border">
                 <img src={shot.dataUrl} alt="" className="aspect-video w-full object-cover" />
                 <div className="flex items-center justify-between gap-2 px-3 py-2">
                   <span className="truncate text-xs text-muted-foreground">{shot.name}</span>
@@ -550,14 +550,14 @@ function TractionStep({
   return (
     <div className="flex flex-col gap-6">
       <div className="grid gap-3 sm:grid-cols-2">
-        <label className="flex gap-3 rounded-xl border border-border px-4 py-3">
+        <label className="flex gap-3 rounded-none border-hairline border px-4 py-3">
           <input type="checkbox" className="mt-1 size-4 accent-[#0066FF]" checked={traction.preRevenue} onChange={(event) => set({ preRevenue: event.target.checked })} />
           <span>
             <span className="block text-sm font-medium">Pre-revenue</span>
             <span className="text-sm text-muted-foreground">The company is not generating revenue yet.</span>
           </span>
         </label>
-        <label className="flex gap-3 rounded-xl border border-border px-4 py-3">
+        <label className="flex gap-3 rounded-none border-hairline border px-4 py-3">
           <input type="checkbox" className="mt-1 size-4 accent-[#0066FF]" checked={traction.preLaunch} onChange={(event) => set({ preLaunch: event.target.checked })} />
           <span>
             <span className="block text-sm font-medium">Pre-launch</span>
@@ -607,7 +607,7 @@ function FundraisingStep({
     update((current) => ({ ...current, fundraising: { ...current.fundraising, ...partial } }));
   return (
     <div className="flex flex-col gap-6">
-      <label className="flex gap-3 rounded-xl border border-border px-4 py-3">
+      <label className="flex gap-3 rounded-none border-hairline border px-4 py-3">
         <input
           type="checkbox"
           className="mt-1 size-4 accent-[#0066FF]"
@@ -659,7 +659,7 @@ function TeamStep({
   return (
     <div className="flex flex-col gap-4">
       {draft.team.map((member, index) => (
-        <div key={member.id} className="flex flex-col gap-5 rounded-xl border border-border p-5">
+        <div key={member.id} className="flex flex-col gap-5 rounded-none border-hairline border p-5">
           <div className="flex items-center justify-between">
             <p className="text-sm font-medium">Team member {index + 1}</p>
             <button
@@ -741,7 +741,7 @@ function TeamStep({
       ))}
       <button
         type="button"
-        className="h-12 rounded-xl border border-dashed border-border text-sm font-medium text-primary hover:bg-primary-soft"
+        className="h-12 blueprint-frame text-sm font-medium text-primary hover:bg-primary-soft"
         onClick={() =>
           update((current) => ({
             ...current,
@@ -770,13 +770,13 @@ function DocumentsStep({
       {DOCUMENTS.map((group) => {
         const files = draft.documents.filter((doc) => doc.category === group.category);
         return (
-          <div key={group.category} className="rounded-xl border border-border p-4">
+          <div key={group.category} className="rounded-none border-hairline border p-4">
             <div className="flex items-start justify-between gap-3">
               <div>
                 <p className="text-sm font-medium">{group.label}</p>
                 <p className="text-sm text-muted-foreground">{group.hint}</p>
               </div>
-              <label className="inline-flex h-10 cursor-pointer items-center rounded-xl bg-primary px-3.5 text-sm font-medium text-primary-foreground">
+              <label className="inline-flex h-10 cursor-pointer items-center rounded-none bg-primary px-3.5 text-sm font-medium text-primary-foreground">
                 Upload
                 <input
                   type="file"
@@ -799,7 +799,7 @@ function DocumentsStep({
             {files.length > 0 ? (
               <ul className="mt-3 flex flex-col gap-2">
                 {files.map((file) => (
-                  <li key={file.id} className="flex items-center justify-between gap-3 rounded-lg bg-muted px-3 py-2">
+                  <li key={file.id} className="flex items-center justify-between gap-3 rounded-none bg-muted px-3 py-2">
                     <span className="min-w-0">
                       <span className="block truncate text-sm">{file.name}</span>
                       <span className="text-xs text-muted-foreground">

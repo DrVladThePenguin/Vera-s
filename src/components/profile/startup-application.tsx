@@ -73,10 +73,10 @@ export function StartupApplicationHeader({ startup }: { startup: PublicStartup }
             alt={`${startup.name} logo`}
             width={64}
             height={64}
-            className="size-14 shrink-0 rounded-lg border border-border object-cover sm:size-16"
+            className="size-14 shrink-0 rounded-none border-hairline border object-cover sm:size-16"
           />
         ) : (
-          <span className="grid size-14 shrink-0 place-items-center rounded-lg border border-border bg-muted text-xl font-semibold text-foreground sm:size-16">
+          <span className="grid size-14 shrink-0 place-items-center rounded-none border-hairline border bg-muted text-xl font-semibold text-foreground sm:size-16">
             {startup.name.slice(0, 1)}
           </span>
         )}
@@ -307,7 +307,7 @@ export function StartupApplicationSections({
                 href={startup.product.demoUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-border px-3 text-xs font-medium hover:bg-muted"
+                className="inline-flex h-9 items-center gap-1.5 rounded-none border-hairline border px-3 text-xs font-medium hover:bg-muted"
               >
                 Open demo
                 <ExternalLink className="size-3.5" />
@@ -318,7 +318,7 @@ export function StartupApplicationSections({
                 href={startup.product.videoUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-border px-3 text-xs font-medium hover:bg-muted"
+                className="inline-flex h-9 items-center gap-1.5 rounded-none border-hairline border px-3 text-xs font-medium hover:bg-muted"
               >
                 Watch video
                 <ExternalLink className="size-3.5" />
@@ -338,7 +338,7 @@ export function StartupApplicationSections({
                 alt={shot.name}
                 width={1280}
                 height={720}
-                className="aspect-video w-full rounded-xl border border-border object-cover"
+                className="aspect-video w-full rounded-none border-hairline border object-cover"
               />
             ))}
           </div>
@@ -615,7 +615,7 @@ export function StartupToc({
         aria-expanded={open}
         aria-controls={id}
         onClick={() => setOpen((current) => !current)}
-        className="flex min-h-11 w-full items-center justify-between gap-3 rounded-lg border border-border bg-white px-3 py-2.5 text-left xl:hidden"
+        className="flex min-h-11 w-full items-center justify-between gap-3 rounded-none border-hairline border bg-white px-3 py-2.5 text-left xl:hidden"
       >
         <span>
           <span className="block text-[11px] font-medium text-muted-foreground">Contents</span>
@@ -738,7 +738,7 @@ export function StartupApplicationPanel({
       <div className="mb-3 xl:hidden">
         <StartupToc id="startup-toc-mobile" activeId={activeId} onNavigate={navigate} />
       </div>
-      <article className="overflow-hidden rounded-2xl border border-border bg-white shadow-[0_1px_2px_rgba(23,23,23,0.04)]">
+      <article className="overflow-hidden panel ">
         <header className="border-b border-border px-5 py-5 sm:px-7 sm:py-6">
           <StartupApplicationHeader startup={startup} />
         </header>

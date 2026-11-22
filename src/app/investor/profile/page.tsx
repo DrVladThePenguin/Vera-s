@@ -11,7 +11,7 @@ export default function Page() {
   if (!investor) return <AppShell role="investor" title="Profile" />;
   return (
     <AppShell role="investor" title="Investor profile" subtitle="Founders see this when you connect.">
-      <section className="rounded-2xl border border-border bg-white p-6 sm:p-8">
+      <section className="panel p-6 sm:p-8">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="flex gap-4">
             <PersonMark name={investor.fullName} photo={investor.photoDataUrl} avatarId={investor.avatarId} size={72} />

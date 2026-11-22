@@ -232,7 +232,7 @@ export function InvestorWizard() {
         </div>
       ) : null}
       {step === 6 ? (
-        <div className="flex flex-col gap-4 rounded-xl border border-border p-5">
+        <div className="flex flex-col gap-4 rounded-none border-hairline border p-5">
           <div className="flex gap-4">
             <PersonMark name={draft.fullName} photo={draft.photoDataUrl} avatarId={draft.avatarId} size={64} />
             <div>
@@ -259,7 +259,7 @@ export function InvestorWizard() {
         </div>
       ) : null}
       {step === 7 ? (
-        <div className="rounded-xl bg-primary-soft px-5 py-4 text-sm leading-6">
+        <div className="rounded-none border-hairline border bg-primary-soft px-5 py-4 text-sm leading-6">
           Discovery opens when you continue. Founder accounts stay on their own dashboard.
         </div>
       ) : null}

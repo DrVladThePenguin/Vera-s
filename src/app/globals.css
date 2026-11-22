@@ -7,11 +7,13 @@
   --muted: #f7f8fa;
   --muted-foreground: #6b6b6b;
   --border: #e8eaf0;
+  --border-hairline: #dcdfe6;
   --primary: #0066ff;
   --primary-foreground: #ffffff;
   --primary-soft: #f3f8ff;
   --ring: #0066ff;
   --destructive: #b42318;
+  --blueprint-grid: rgba(232, 234, 240, 0.85);
 }
 
 @theme inline {
@@ -27,6 +29,10 @@
   --color-ring: var(--ring);
   --color-destructive: var(--destructive);
   --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-display), var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-family-display: var(--font-display), var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-family-mono: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
 body {
@@ -36,6 +42,15 @@ body {
 }
 
 @layer base {
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display), var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
   a[href],
   button:not(:disabled),
   [role="button"]:not([aria-disabled="true"]),
@@ -50,8 +65,128 @@ body {
   }
 
   :focus-visible {
-    outline: 2px solid var(--ring);
+    outline: 1px solid var(--ring);
     outline-offset: 2px;
+  }
+}
+
+@layer utilities {
+  .border-hairline {
+    border-style: solid;
+    border-color: var(--border-hairline);
+    border-width: 1px;
+  }
+
+  @supports (border-width: 0.5px) {
+    .border-hairline {
+      border-width: 0.5px;
+    }
+  }
+
+  .blueprint-surface {
+    background-color: var(--muted);
+    background-image:
+      linear-gradient(var(--blueprint-grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--blueprint-grid) 1px, transparent 1px);
+    background-size: 32px 32px;
+    background-position: center top;
+  }
+
+  .text-meta {
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: 10px;
+    line-height: 1.4;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+  }
+
+  .blueprint-frame {
+    position: relative;
+    border: 1px solid var(--border-hairline);
+    background: var(--card);
+    overflow: hidden;
+  }
+
+  @supports (border-width: 0.5px) {
+    .blueprint-frame {
+      border-width: 0.5px;
+    }
+  }
+
+  .blueprint-frame::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(
+        to top right,
+        transparent calc(50% - 0.5px),
+        var(--border-hairline) calc(50% - 0.5px),
+        var(--border-hairline) calc(50% + 0.5px),
+        transparent calc(50% + 0.5px)
+      ),
+      linear-gradient(
+        to top left,
+        transparent calc(50% - 0.5px),
+        var(--border-hairline) calc(50% - 0.5px),
+        var(--border-hairline) calc(50% + 0.5px),
+        transparent calc(50% + 0.5px)
+      );
+    opacity: 0.55;
+  }
+
+  .blueprint-frame::after {
+    content: "";
+    position: absolute;
+    inset: 6px;
+    pointer-events: none;
+    border: 1px solid color-mix(in srgb, var(--border-hairline) 65%, transparent);
+  }
+
+  @supports (border-width: 0.5px) {
+    .blueprint-frame::after {
+      border-width: 0.5px;
+    }
+  }
+
+  .blueprint-rail {
+    border-color: var(--border-hairline);
+    border-style: solid;
+    border-width: 0 0 1px;
+  }
+
+  @supports (border-width: 0.5px) {
+    .blueprint-rail {
+      border-bottom-width: 0.5px;
+    }
+  }
+}
+
+@layer components {
+  .panel {
+    border-radius: 0;
+    border: 1px solid var(--border-hairline);
+    background: var(--card);
+  }
+
+  @supports (border-width: 0.5px) {
+    .panel {
+      border-width: 0.5px;
+    }
+  }
+
+  .panel-inset {
+    border-radius: 0;
+    border: 1px solid var(--border-hairline);
+    background: var(--muted);
+  }
+
+  @supports (border-width: 0.5px) {
+    .panel-inset {
+      border-width: 0.5px;
+    }
   }
 }
 
