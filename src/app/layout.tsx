@@ -9,6 +9,8 @@ const mozillaText = Mozilla_Text({
   subsets: ["latin"],
   variable: "--font-display",
   weight: ["400", "500", "600", "700"],
+  adjustFontFallback: false,
+  fallback: ["system-ui", "Segoe UI", "sans-serif"],
 });
 
 const plexMono = IBM_Plex_Mono({

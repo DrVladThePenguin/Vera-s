@@ -1,35 +1,10 @@
 'use client';
 
-import { useEffect, useRef, type CSSProperties, type HTMLAttributes } from 'react';
+import { useEffect, useRef } from 'react';
 import './Grainient.css';
+import type { GrainientComponentProps, GrainientProps } from './grainient-types';
 
-export type GrainientType = 'linear' | 'radial';
-
-export interface GrainientProps {
-  colors?: string[];
-  type?: GrainientType;
-  angle?: number;
-  bands?: number;
-  speed?: number;
-  flow?: number;
-  scale?: number;
-  softness?: number;
-  silk?: number;
-  grainAmount?: number;
-  grainSize?: number;
-  grainAnimated?: boolean;
-  contrast?: number;
-  saturation?: number;
-  variation?: number;
-  interactive?: boolean;
-  stir?: number;
-  clickSwirl?: boolean;
-  intro?: boolean;
-  lightMode?: boolean;
-  dpr?: number;
-  className?: string;
-  style?: CSSProperties;
-}
+export type { GrainientProps, GrainientType } from './grainient-types';
 
 type Settings = {
   colors: string[];
@@ -335,7 +310,7 @@ const Grainient = ({
   className = '',
   style,
   ...rest
-}: GrainientProps & Omit<HTMLAttributes<HTMLDivElement>, keyof GrainientProps>) => {
+}: GrainientComponentProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wakeRef = useRef<(() => void) | null>(null);

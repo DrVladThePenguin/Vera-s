@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import "../components/grainient/Grainient.css";
 
 :root {
   --background: #ffffff;
@@ -216,5 +215,29 @@ body {
     animation-iteration-count: 1 !important;
     scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/* Grainient card fallback (avoid extra CSS @import path that can fail in some hosts). */
+.grainient-fallback {
+  background: linear-gradient(55deg, #ffffff 0%, #e8f2ff 22%, #0066ff 58%, #d9e7e0 100%);
+  background-size: 140% 140%;
+  animation: grainient-fallback-shift 18s ease-in-out infinite;
+}
+
+@keyframes grainient-fallback-shift {
+  0%,
+  100% {
+    background-position: 0% 40%;
+  }
+  50% {
+    background-position: 100% 60%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grainient-fallback {
+    animation: none;
+    background-size: 100% 100%;
   }
 }

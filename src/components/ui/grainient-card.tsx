@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import type { ReactNode } from "react";
-import type { GrainientProps } from "@/components/grainient/Grainient";
+import type { GrainientProps } from "@/components/grainient/grainient-types";
 import { cn } from "@/lib/utils";
 
 const Grainient = dynamic(() => import("@/components/grainient/Grainient"), { ssr: false });
