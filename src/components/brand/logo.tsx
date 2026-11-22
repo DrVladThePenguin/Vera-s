@@ -12,8 +12,8 @@ export function Logo({
   const src = variant === "mono" ? "/logo-mono.svg" : "/logo.svg";
   return (
     <span
-      className={cn("inline-flex shrink-0", className)}
-      style={{ width: size, height: size }}
+      className={cn("inline-flex shrink-0 overflow-hidden", className)}
+      style={{ width: size, height: size, minWidth: size, minHeight: size, maxWidth: size, maxHeight: size }}
     >
       <img
         src={src}
@@ -21,17 +21,17 @@ export function Logo({
         width={size}
         height={size}
         draggable={false}
-        style={{ width: "100%", height: "100%", objectFit: "contain" }}
+        className="block size-full max-h-full max-w-full object-contain"
       />
     </span>
   );
 }
 
-export function BootScreen() {
+export function BootScreen({ message = "Loading…" }: { message?: string }) {
   return (
-    <div className="blueprint-surface grid min-h-screen place-items-center px-4">
+    <div className="blueprint-surface flex min-h-screen flex-col items-center justify-center gap-4 px-4">
       <Logo size={56} />
-      <p className="text-meta mt-6">Loading workspace</p>
+      <p className="text-meta normal-case">{message}</p>
     </div>
   );
 }

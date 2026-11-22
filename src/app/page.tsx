@@ -30,7 +30,8 @@ function HomeScreen() {
     router.replace(destination(store.session.role, record?.status));
   }, [router, store.founder, store.investor, store.ready, store.session]);
 
-  if (!store.ready || store.session) return <BootScreen />;
+  if (!store.ready) return <BootScreen message="Loading…" />;
+  if (store.session) return <BootScreen message="Opening your workspace…" />;
 
   function submit(event: React.FormEvent) {
     event.preventDefault();
@@ -81,7 +82,7 @@ function HomeScreen() {
                 onClick={() => setRole(value)}
                 className={cn(
                   "rounded-none border px-4 py-4 text-left",
-                  role === value ? "border-primary bg-primary-soft" : "border-hairline hover:bg-muted",
+                  role === value ? "border-primary bg-[#f3f8ff]" : "border-hairline bg-white hover:border-primary/40",
                 )}
               >
                 <span className="block text-sm font-bold">{label}</span>

@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { Compass, Link2, Settings, UserRound } from "lucide-react";
-import { BootScreen, Logo } from "@/components/brand/logo";
+import { Logo } from "@/components/brand/logo";
 import { PersonMark } from "@/components/onboarding/widgets";
+import { SessionGate } from "@/components/app/session-gate";
 import { useStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 import type { Role } from "@/lib/types";
@@ -29,7 +29,6 @@ const NAV: Record<
 function profilePaths(role: Role) {
   return {
     settings: role === "founder" ? "/founder/settings" : "/investor/settings",
-    profile: role === "founder" ? "/founder/profile" : "/investor/profile",
   };
 }
 
@@ -44,30 +43,31 @@ export function AppShell({
   subtitle?: string;
   children?: React.ReactNode;
 }) {
+  return (
+    <SessionGate role={role}>
+      <ShellLayout role={role} title={title} subtitle={subtitle}>
+        {children}
+      </ShellLayout>
+    </SessionGate>
+  );
+}
+
+function ShellLayout({
+  role,
+  title,
+  subtitle,
+  children,
+}: {
+  role: Role;
+  title: string;
+  subtitle?: string;
+  children?: React.ReactNode;
+}) {
   const store = useStore();
-  const router = useRouter();
   const pathname = usePathname();
-  const record = role === "founder" ? store.founder : store.investor;
   const paths = profilePaths(role);
 
-  useEffect(() => {
-    if (!store.ready) return;
-    if (!store.session) {
-      router.replace("/");
-      return;
-    }
-    if (store.session.role !== role) {
-      router.replace(store.session.role === "founder" ? "/founder/investors" : "/investor/discover");
-      return;
-    }
-    if (record?.status !== "complete") {
-      router.replace(role === "founder" ? "/onboarding" : "/onboarding/investor");
-    }
-  }, [record?.status, role, router, store.ready, store.session]);
-
-  if (!store.ready || !store.session || store.session.role !== role || record?.status !== "complete") {
-    return <BootScreen />;
-  }
+  if (!store.session) return null;
 
   const displayName =
     role === "founder" ? store.founder?.founder.fullName : store.investor?.fullName;
@@ -76,7 +76,7 @@ export function AppShell({
 
   return (
     <div className="blueprint-surface min-h-screen lg:grid lg:grid-cols-[248px_1fr]">
-      <aside className="flex flex-col border-hairline border-b bg-white lg:min-h-screen lg:border-r lg:border-b-0">
+      <aside className="flex min-h-0 flex-col border-hairline border-b bg-white lg:min-h-screen lg:border-r lg:border-b-0">
         <div className="blueprint-rail px-5 py-5">
           <Link href={NAV[role][0].href} aria-label="Home" className="inline-flex">
             <Logo size={40} />
@@ -84,7 +84,7 @@ export function AppShell({
         </div>
         <nav
           aria-label="Main"
-          className="flex gap-0 overflow-x-auto px-2 py-3 [scrollbar-width:none] lg:flex-1 lg:flex-col [&::-webkit-scrollbar]:hidden"
+          className="flex shrink-0 gap-0 overflow-x-auto px-2 py-3 [scrollbar-width:none] lg:min-h-0 lg:flex-1 lg:flex-col lg:overflow-y-auto [&::-webkit-scrollbar]:hidden"
         >
           {NAV[role].map((item) => {
             const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
@@ -94,19 +94,19 @@ export function AppShell({
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "flex items-center gap-2 rounded-none border border-transparent px-3 py-2.5 text-sm font-medium whitespace-nowrap",
+                  "flex items-center gap-2 rounded-none border border-transparent px-3 py-2.5 text-sm font-medium whitespace-nowrap text-foreground",
                   active
                     ? "border-hairline border bg-primary font-semibold text-primary-foreground"
-                    : "text-foreground hover:border-hairline hover:border hover:bg-primary/[0.04]",
+                    : "hover:border-hairline hover:border hover:bg-primary/[0.06]",
                 )}
               >
-                <Icon size={16} strokeWidth={1.5} />
-                {item.label}
+                <Icon size={16} strokeWidth={1.5} aria-hidden />
+                <span>{item.label}</span>
               </Link>
             );
           })}
         </nav>
-        <div className="blueprint-rail mt-auto flex flex-col gap-3 px-4 py-4">
+        <div className="blueprint-rail mt-auto shrink-0 flex flex-col gap-3 px-4 py-4">
           <div className="flex items-center gap-3">
             <PersonMark
               name={displayName || store.session.email}
@@ -115,7 +115,7 @@ export function AppShell({
               size={40}
             />
             <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-bold">{displayName || "Account"}</p>
+              <p className="truncate text-sm font-bold text-foreground">{displayName || "Account"}</p>
               <p className="truncate font-mono text-[10px] text-muted-foreground">{store.session.email}</p>
             </div>
           </div>
@@ -128,14 +128,14 @@ export function AppShell({
                 : "border-hairline text-foreground hover:border-primary hover:text-primary",
             )}
           >
-            <Settings size={16} strokeWidth={1.5} />
+            <Settings size={16} strokeWidth={1.5} aria-hidden />
             Settings
           </Link>
         </div>
       </aside>
-      <main className="border-hairline border-transparent bg-white px-4 py-6 sm:px-8 sm:py-8 lg:border-l">
+      <main className="min-w-0 border-hairline border-transparent bg-white px-4 py-6 sm:px-8 sm:py-8 lg:border-l">
         <header className="mb-8 border-hairline border-b pb-6">
-          <h1 className="text-2xl font-bold tracking-tight">{title}</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">{title}</h1>
           {subtitle ? <p className="mt-2 font-mono text-xs text-muted-foreground">{subtitle}</p> : null}
         </header>
         {children}
