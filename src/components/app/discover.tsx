@@ -31,20 +31,20 @@ export function DiscoverList() {
     <div className="flex flex-col gap-5">
       <div className="grid gap-3 sm:grid-cols-[1fr_180px_180px]">
         <label className="block">
-          <span className="mb-1.5 block text-xs font-medium text-muted-foreground">Search</span>
+          <span className="text-meta mb-1.5 block normal-case">Search</span>
           <input
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Company name or keyword"
-            className="h-12 w-full rounded-xl border border-border bg-white px-3.5 text-[15px] outline-none focus:border-primary focus:ring-4 focus:ring-primary/15"
+            className="h-12 w-full panel px-3.5 text-[15px] outline-none focus:border-primary focus:ring-4 focus:ring-primary/15"
           />
         </label>
         <label className="block">
-          <span className="mb-1.5 block text-xs font-medium text-muted-foreground">Industry</span>
+          <span className="text-meta mb-1.5 block normal-case">Industry</span>
           <select
             value={industry}
             onChange={(event) => setIndustry(event.target.value)}
-            className="h-12 w-full rounded-xl border border-border bg-white px-3 text-sm"
+            className="h-12 w-full panel px-3 text-sm"
           >
             <option value="">All industries</option>
             {INDUSTRIES.map((item) => (
@@ -53,11 +53,11 @@ export function DiscoverList() {
           </select>
         </label>
         <label className="block">
-          <span className="mb-1.5 block text-xs font-medium text-muted-foreground">Stage</span>
+          <span className="text-meta mb-1.5 block normal-case">Stage</span>
           <select
             value={stage}
             onChange={(event) => setStage(event.target.value)}
-            className="h-12 w-full rounded-xl border border-border bg-white px-3 text-sm"
+            className="h-12 w-full panel px-3 text-sm"
           >
             <option value="">All stages</option>
             {STAGES.map((item) => (
@@ -67,7 +67,7 @@ export function DiscoverList() {
         </label>
       </div>
       {startups.length === 0 ? (
-        <div className="rounded-2xl border border-border bg-white px-6 py-12 text-center">
+        <div className="panel px-6 py-12 text-center">
           <p className="font-medium">No startups match these filters.</p>
           <p className="mt-2 text-sm text-muted-foreground">
             Widen the industry or stage to see more of the market.
@@ -79,14 +79,14 @@ export function DiscoverList() {
               setIndustry("");
               setStage("");
             }}
-            className="mt-5 inline-flex h-11 items-center rounded-lg border border-border px-4 text-sm font-medium hover:bg-muted sm:h-10"
+            className="mt-5 inline-flex h-11 items-center rounded-none border-hairline border px-4 text-sm font-medium hover:bg-muted sm:h-10"
           >
             Clear filters
           </button>
         </div>
       ) : (
-        <div className="overflow-hidden rounded-2xl border border-border bg-white">
-          <div className="hidden border-b border-border px-5 py-2.5 text-xs font-medium text-muted-foreground sm:grid sm:grid-cols-[minmax(0,1fr)_150px_100px] sm:gap-6">
+        <div className="overflow-hidden panel">
+          <div className="text-meta hidden border-hairline border-b px-5 py-2.5 sm:grid sm:grid-cols-[minmax(0,1fr)_150px_100px] sm:gap-6">
             <span>Company</span>
             <span>Industry</span>
             <span className="text-right">Raising</span>
@@ -152,7 +152,7 @@ export function DecisionBar({ startupId, startupName }: { startupId: string; sta
 
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <span className="mr-1 inline-flex h-9 items-center gap-2 rounded-lg border border-border bg-white px-3 text-xs font-medium text-muted-foreground">
+      <span className="mr-1 inline-flex h-9 items-center gap-2 rounded-none border-hairline border bg-white px-3 text-xs font-medium text-muted-foreground">
         <span
           className={cn(
             "size-1.5 rounded-full",
@@ -166,7 +166,7 @@ export function DecisionBar({ startupId, startupName }: { startupId: string; sta
         aria-pressed={current === "interested"}
         onClick={() => store.setRelation(startupId, "interested")}
         className={cn(
-          "inline-flex h-9 items-center gap-1.5 rounded-lg px-3.5 text-sm font-medium transition-colors",
+          "inline-flex h-9 items-center gap-1.5 rounded-none px-3.5 text-sm font-medium transition-colors",
           current === "interested"
             ? "bg-primary text-primary-foreground"
             : "border border-border bg-white text-foreground hover:bg-muted",
@@ -180,7 +180,7 @@ export function DecisionBar({ startupId, startupName }: { startupId: string; sta
         aria-pressed={current === "passed"}
         onClick={() => store.setRelation(startupId, "passed")}
         className={cn(
-          "inline-flex h-9 items-center gap-1.5 rounded-lg px-3.5 text-sm font-medium transition-colors",
+          "inline-flex h-9 items-center gap-1.5 rounded-none px-3.5 text-sm font-medium transition-colors",
           current === "passed"
             ? "border border-border bg-muted text-foreground"
             : "border border-border bg-white text-foreground hover:bg-muted",
@@ -193,7 +193,7 @@ export function DecisionBar({ startupId, startupName }: { startupId: string; sta
         <button
           type="button"
           onClick={() => store.setRelation(startupId, "connected")}
-          className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-border bg-white px-3.5 text-sm font-medium text-primary hover:bg-primary-soft"
+          className="inline-flex h-9 items-center gap-1.5 rounded-none border-hairline border bg-white px-3.5 text-sm font-medium text-primary hover:bg-primary-soft"
         >
           <Link2 className="size-3.5" />
           Connect
@@ -202,7 +202,7 @@ export function DecisionBar({ startupId, startupName }: { startupId: string; sta
       {current === "connected" ? (
         <Link
           href="/investor/connections"
-          className="inline-flex h-9 items-center rounded-lg px-2 text-sm font-medium text-primary hover:underline"
+          className="inline-flex h-9 items-center rounded-none px-2 text-sm font-medium text-primary hover:underline"
         >
           Open connection
         </Link>

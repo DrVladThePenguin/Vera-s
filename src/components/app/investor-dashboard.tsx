@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ChartCard, DistributionChart, DualChart, RatioChart } from "@/components/app/charts";
 import { matchScore, useCatalog } from "@/components/app/catalog";
 import { Badge } from "@/components/ui/badge";
+import { GrainientCard } from "@/components/ui/grainient-card";
 import { INDUSTRY_DISTRIBUTION, INVESTOR_PIPELINE } from "@/lib/mock";
 import { useStore } from "@/lib/store";
 
@@ -27,15 +28,13 @@ export function InvestorDashboard() {
 
   return (
     <div className="flex flex-col gap-4">
-      <p className="text-xs text-muted-foreground">
-        Charts show sample market data. Your decision counts are live.
-      </p>
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <p className="text-meta normal-case">Sample market charts · live decision counts</p>
+      <div className="grid gap-px bg-border sm:grid-cols-2 xl:grid-cols-4">
         {metrics.map((metric) => (
-          <article key={metric.label} className="rounded-2xl border border-border bg-white p-5">
-            <p className="text-sm text-muted-foreground">{metric.label}</p>
-            <p className="mt-3 text-3xl font-semibold tracking-tight">{metric.value}</p>
-          </article>
+          <GrainientCard key={metric.label} className="p-5" frost="light">
+            <p className="text-meta">{metric.label}</p>
+            <p className="mt-3 font-display text-3xl font-bold tracking-tight tabular-nums">{metric.value}</p>
+          </GrainientCard>
         ))}
       </div>
       <div className="grid gap-4 xl:grid-cols-2">
@@ -52,8 +51,8 @@ export function InvestorDashboard() {
         <ChartCard title="Industries in discovery">
           <DistributionChart data={INDUSTRY_DISTRIBUTION} />
         </ChartCard>
-        <section className="rounded-2xl border border-border bg-white p-5">
-          <h2 className="mb-4 text-sm font-medium">Suggested for your focus</h2>
+        <GrainientCard as="section" className="p-5" frost="light">
+          <h2 className="mb-4 text-base font-bold">Suggested for your focus</h2>
           <ul className="flex flex-col gap-3">
             {recommended.map((startup) => (
               <li key={startup.id} className="flex items-center justify-between gap-3">
@@ -72,7 +71,7 @@ export function InvestorDashboard() {
           <Badge tone="soft" className="mt-4">
             {store.investor?.organisation}
           </Badge>
-        </section>
+        </GrainientCard>
       </div>
     </div>
   );

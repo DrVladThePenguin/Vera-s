@@ -12,8 +12,8 @@ export function Logo({
   const src = variant === "mono" ? "/logo-mono.svg" : "/logo.svg";
   return (
     <span
-      className={cn("inline-flex shrink-0", className)}
-      style={{ width: size, height: size }}
+      className={cn("inline-flex shrink-0 overflow-hidden", className)}
+      style={{ width: size, height: size, minWidth: size, minHeight: size, maxWidth: size, maxHeight: size }}
     >
       <img
         src={src}
@@ -21,16 +21,10 @@ export function Logo({
         width={size}
         height={size}
         draggable={false}
-        style={{ width: "100%", height: "100%", objectFit: "contain" }}
+        className="block size-full max-h-full max-w-full object-contain"
       />
     </span>
   );
 }
 
-export function BootScreen() {
-  return (
-    <div className="grid min-h-screen place-items-center bg-muted">
-      <Logo size={56} />
-    </div>
-  );
-}
+export { BootScreen } from "@/components/brand/loading-screen";

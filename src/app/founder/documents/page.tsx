@@ -22,10 +22,10 @@ export default function Page() {
         {GROUPS.map((group) => {
           const files = documents.filter((doc) => doc.category === group.category);
           return (
-            <section key={group.category} className="rounded-2xl border border-border bg-white p-5">
+            <section key={group.category} className="panel p-5">
               <div className="flex items-center justify-between gap-3">
                 <h2 className="font-medium">{group.label}</h2>
-                <label className="inline-flex h-10 cursor-pointer items-center rounded-xl bg-primary px-3.5 text-sm font-medium text-primary-foreground">
+                <label className="inline-flex h-10 cursor-pointer items-center rounded-none bg-primary px-3.5 text-sm font-medium text-primary-foreground">
                   Upload
                   <input
                     type="file"
@@ -56,7 +56,7 @@ export default function Page() {
               ) : (
                 <ul className="mt-4 flex flex-col gap-2">
                   {files.map((file) => (
-                    <li key={file.id} className="flex items-center justify-between gap-3 rounded-xl bg-muted px-3 py-2">
+                    <li key={file.id} className="flex items-center justify-between gap-3 rounded-none bg-muted px-3 py-2">
                       <span>
                         <span className="block text-sm">{file.name}</span>
                         <span className="text-xs text-muted-foreground">

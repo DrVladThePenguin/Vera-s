@@ -20,7 +20,7 @@ export default function Page() {
           <div
             role="tablist"
             aria-label="Discovery view"
-            className="inline-flex rounded-xl border border-border bg-white p-1"
+            className="inline-flex panel p-1"
           >
             {(
               [
@@ -35,7 +35,7 @@ export default function Page() {
                 aria-selected={view === value}
                 onClick={() => setView(value)}
                 className={cn(
-                  "h-11 rounded-lg px-4 text-sm font-medium transition-colors sm:h-9",
+                  "h-11 rounded-none px-4 text-sm font-medium transition-colors sm:h-9",
                   view === value
                     ? "bg-foreground text-background"
                     : "text-muted-foreground hover:text-foreground",

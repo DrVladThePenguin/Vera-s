@@ -4,14 +4,17 @@
   --background: #ffffff;
   --foreground: #171717;
   --card: #ffffff;
-  --muted: #f7f8fa;
+  --secondary: #ffffff;
+  --muted: #ffffff;
   --muted-foreground: #6b6b6b;
   --border: #e8eaf0;
+  --border-hairline: #dcdfe6;
   --primary: #0066ff;
   --primary-foreground: #ffffff;
-  --primary-soft: #f3f8ff;
+  --primary-soft: #ffffff;
   --ring: #0066ff;
   --destructive: #b42318;
+  --blueprint-grid: rgba(0, 102, 255, 0.06);
 }
 
 @theme inline {
@@ -26,7 +29,12 @@
   --color-primary-soft: var(--primary-soft);
   --color-ring: var(--ring);
   --color-destructive: var(--destructive);
+  --color-secondary: var(--secondary);
   --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-display), var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-family-display: var(--font-display), var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-family-mono: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
 body {
@@ -36,6 +44,15 @@ body {
 }
 
 @layer base {
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display), var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
   a[href],
   button:not(:disabled),
   [role="button"]:not([aria-disabled="true"]),
@@ -50,8 +67,128 @@ body {
   }
 
   :focus-visible {
-    outline: 2px solid var(--ring);
+    outline: 1px solid var(--ring);
     outline-offset: 2px;
+  }
+}
+
+@layer utilities {
+  .border-hairline {
+    border-style: solid;
+    border-color: var(--border-hairline);
+    border-width: 1px;
+  }
+
+  @supports (border-width: 0.5px) {
+    .border-hairline {
+      border-width: 0.5px;
+    }
+  }
+
+  .blueprint-surface {
+    background-color: var(--muted);
+    background-image:
+      linear-gradient(var(--blueprint-grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--blueprint-grid) 1px, transparent 1px);
+    background-size: 32px 32px;
+    background-position: center top;
+  }
+
+  .text-meta {
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: 10px;
+    line-height: 1.4;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+  }
+
+  .blueprint-frame {
+    position: relative;
+    border: 1px solid var(--border-hairline);
+    background: var(--card);
+    overflow: hidden;
+  }
+
+  @supports (border-width: 0.5px) {
+    .blueprint-frame {
+      border-width: 0.5px;
+    }
+  }
+
+  .blueprint-frame::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(
+        to top right,
+        transparent calc(50% - 0.5px),
+        var(--border-hairline) calc(50% - 0.5px),
+        var(--border-hairline) calc(50% + 0.5px),
+        transparent calc(50% + 0.5px)
+      ),
+      linear-gradient(
+        to top left,
+        transparent calc(50% - 0.5px),
+        var(--border-hairline) calc(50% - 0.5px),
+        var(--border-hairline) calc(50% + 0.5px),
+        transparent calc(50% + 0.5px)
+      );
+    opacity: 0.55;
+  }
+
+  .blueprint-frame::after {
+    content: "";
+    position: absolute;
+    inset: 6px;
+    pointer-events: none;
+    border: 1px solid color-mix(in srgb, var(--border-hairline) 65%, transparent);
+  }
+
+  @supports (border-width: 0.5px) {
+    .blueprint-frame::after {
+      border-width: 0.5px;
+    }
+  }
+
+  .blueprint-rail {
+    border-color: var(--border-hairline);
+    border-style: solid;
+    border-width: 0 0 1px;
+  }
+
+  @supports (border-width: 0.5px) {
+    .blueprint-rail {
+      border-bottom-width: 0.5px;
+    }
+  }
+}
+
+@layer components {
+  .panel {
+    border-radius: 0;
+    border: 1px solid var(--border-hairline);
+    background: var(--card);
+  }
+
+  @supports (border-width: 0.5px) {
+    .panel {
+      border-width: 0.5px;
+    }
+  }
+
+  .panel-inset {
+    border-radius: 0;
+    border: 1px solid var(--border-hairline);
+    background: var(--muted);
+  }
+
+  @supports (border-width: 0.5px) {
+    .panel-inset {
+      border-width: 0.5px;
+    }
   }
 }
 
@@ -78,5 +215,73 @@ body {
     animation-iteration-count: 1 !important;
     scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/* Grainient card fallback (avoid extra CSS @import path that can fail in some hosts). */
+.grainient-fallback {
+  background:
+    linear-gradient(125deg, #0066ff 0%, #3385ff 35%, #d9e7e0 62%, #ffffff 100%),
+    linear-gradient(55deg, #ffffff 0%, #0066ff 45%, #b3d4ff 70%, #ffffff 100%);
+  background-size: 160% 160%, 140% 140%;
+  background-position: 0% 50%, 100% 50%;
+  animation: grainient-fallback-shift 16s ease-in-out infinite;
+}
+
+.grainient-discover {
+  background:
+    linear-gradient(130deg, #3a3441 0%, #0066ff 42%, #3385ff 58%, #d9e7e0 78%, #ffffff 100%),
+    linear-gradient(48deg, #d9e7e0 0%, #0066ff 38%, #3a3441 72%, #0066ff 100%);
+  background-size: 170% 170%, 150% 150%;
+  background-position: 20% 45%, 80% 55%;
+  animation: grainient-discover-shift 20s ease-in-out infinite;
+}
+
+@keyframes grainient-discover-shift {
+  0%,
+  100% {
+    background-position: 15% 40%, 85% 50%;
+  }
+  50% {
+    background-position: 85% 60%, 15% 45%;
+  }
+}
+
+@keyframes loading-rail {
+  0% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(320%);
+  }
+}
+
+.loading-rail {
+  animation: loading-rail 1.25s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loading-rail {
+    animation: none;
+    width: 40%;
+    margin-inline: auto;
+  }
+}
+
+@keyframes grainient-fallback-shift {
+  0%,
+  100% {
+    background-position: 0% 40%, 100% 50%;
+  }
+  50% {
+    background-position: 100% 60%, 0% 50%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grainient-fallback,
+  .grainient-discover {
+    animation: none;
+    background-size: 100% 100%;
   }
 }

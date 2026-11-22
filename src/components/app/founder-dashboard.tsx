@@ -1,6 +1,7 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
+import { GrainientCard } from "@/components/ui/grainient-card";
 import { ChartCard, DistributionChart, InterestChart, RatioChart, ViewsChart } from "@/components/app/charts";
 import {
   BASE_METRICS,
@@ -60,19 +61,17 @@ export function FounderDashboard() {
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <p className="text-sm text-muted-foreground">
+        <p className="font-mono text-xs text-muted-foreground">
           {founder?.company.name} · {founder?.company.industry}
         </p>
-        <p className="mt-1 text-xs text-muted-foreground">
-          Sample metrics include the investor activity saved on this device.
-        </p>
+        <p className="text-meta mt-2 normal-case">Device-local sample metrics</p>
       </div>
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+      <div className="grid gap-px bg-border sm:grid-cols-2 xl:grid-cols-3">
         {metrics.map((metric) => (
-          <article key={metric.label} className="rounded-2xl border border-border bg-white p-5">
-            <p className="text-sm text-muted-foreground">{metric.label}</p>
-            <p className="mt-3 text-3xl font-semibold tracking-tight">{metric.value}</p>
-          </article>
+          <GrainientCard key={metric.label} className="p-5" frost="light">
+            <p className="text-meta">{metric.label}</p>
+            <p className="mt-3 font-display text-3xl font-bold tracking-tight tabular-nums">{metric.value}</p>
+          </GrainientCard>
         ))}
       </div>
       <div className="grid gap-4 xl:grid-cols-2">
@@ -91,11 +90,11 @@ export function FounderDashboard() {
         <ChartCard title="Investor industry distribution">
           <DistributionChart data={INDUSTRY_DISTRIBUTION} />
         </ChartCard>
-        <section className="rounded-2xl border border-border bg-white p-5">
-          <h2 className="mb-4 text-sm font-medium">Recent investor activity</h2>
+        <GrainientCard as="section" className="p-5" frost="light">
+          <h2 className="mb-4 text-base font-bold">Recent investor activity</h2>
           <ul className="flex max-h-64 flex-col gap-3 overflow-auto">
             {activity.map((item) => (
-              <li key={item.id} className="flex items-start justify-between gap-3 border-b border-border pb-3 last:border-0">
+              <li key={item.id} className="flex items-start justify-between gap-3 border-hairline border-b pb-3 last:border-0">
                 <div>
                   <p className="text-sm font-medium">{item.title}</p>
                   <p className="text-sm text-muted-foreground">{item.detail}</p>
@@ -104,7 +103,7 @@ export function FounderDashboard() {
               </li>
             ))}
           </ul>
-        </section>
+        </GrainientCard>
       </div>
     </div>
   );

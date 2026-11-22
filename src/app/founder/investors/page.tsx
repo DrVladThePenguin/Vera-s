@@ -103,7 +103,7 @@ function RelationSection({
   empty: string;
 }) {
   return (
-    <section className="rounded-2xl border border-border bg-white p-5">
+    <section className="panel p-5">
       <div className="flex items-start justify-between gap-3">
         <div>
           <h2 className="text-base font-semibold tracking-tight">{title}</h2>

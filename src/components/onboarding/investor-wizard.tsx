@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { RedirectScreen } from "@/components/app/redirect-screen";
 import { BootScreen } from "@/components/brand/logo";
 import { OnboardingShell } from "@/components/onboarding/shell";
 import { AreaInput, Chips, count, Field, PersonMark, PhotoPicker, SelectField, TextInput } from "@/components/onboarding/widgets";
@@ -66,19 +67,26 @@ export function InvestorWizard() {
 
   useEffect(() => {
     if (!store.ready) return;
-    if (!store.session || store.session.role !== "investor" || !draft) {
+    if (!store.session || store.session.role !== "investor") {
       router.replace("/");
       return;
     }
-    if (draft.status === "complete" && !edit) router.replace("/investor");
+    if (!draft) return;
+    if (draft.status === "complete" && !edit) router.replace("/investor/discover");
   }, [draft, edit, router, store.ready, store.session]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [localStep, draft?.step]);
 
-  if (!store.ready || !draft || store.session?.role !== "investor") return <BootScreen />;
-  if (draft.status === "complete" && !edit) return <BootScreen />;
+  if (!store.ready) return <BootScreen message="Loading your profile…" />;
+  if (!store.session || store.session.role !== "investor") return <BootScreen />;
+  if (!draft) return <BootScreen message="Preparing your investor profile…" />;
+  if (draft.status === "complete" && !edit) {
+    return (
+      <RedirectScreen href="/investor/discover" message="Opening discover…" fallbackLabel="Go to Discover" />
+    );
+  }
   const profile: InvestorDraft = draft;
 
   const editing = draft.status === "complete" && edit > 0;
@@ -107,7 +115,7 @@ export function InvestorWizard() {
   function onNext() {
     if (step === 7) {
       update((current) => ({ ...current, status: "complete", step: 7 }));
-      router.push("/investor");
+      router.push("/investor/discover");
       return;
     }
     const nextErrors = validateInvestorStep(step, profile);
@@ -232,7 +240,7 @@ export function InvestorWizard() {
         </div>
       ) : null}
       {step === 6 ? (
-        <div className="flex flex-col gap-4 rounded-xl border border-border p-5">
+        <div className="flex flex-col gap-4 rounded-none border-hairline border p-5">
           <div className="flex gap-4">
             <PersonMark name={draft.fullName} photo={draft.photoDataUrl} avatarId={draft.avatarId} size={64} />
             <div>
@@ -259,7 +267,7 @@ export function InvestorWizard() {
         </div>
       ) : null}
       {step === 7 ? (
-        <div className="rounded-xl bg-primary-soft px-5 py-4 text-sm leading-6">
+        <div className="rounded-none border-hairline border bg-primary-soft px-5 py-4 text-sm leading-6">
           Discovery opens when you continue. Founder accounts stay on their own dashboard.
         </div>
       ) : null}

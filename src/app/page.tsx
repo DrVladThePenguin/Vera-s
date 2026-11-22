@@ -3,16 +3,18 @@
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
+import { RedirectScreen } from "@/components/app/redirect-screen";
 import { BootScreen, Logo } from "@/components/brand/logo";
 import { Button } from "@/components/ui/button";
+import { GrainientCard } from "@/components/ui/grainient-card";
 import { Input } from "@/components/ui/input";
 import { useStore } from "@/lib/store";
 import type { Role } from "@/lib/types";
 import { cn, isEmail } from "@/lib/utils";
 
 function destination(role: Role, status?: string) {
-  if (role === "founder") return status === "complete" ? "/founder" : "/onboarding";
-  return status === "complete" ? "/investor" : "/onboarding/investor";
+  if (role === "founder") return status === "complete" ? "/founder/investors" : "/onboarding";
+  return status === "complete" ? "/investor/discover" : "/onboarding/investor";
 }
 
 function HomeScreen() {
@@ -30,7 +32,21 @@ function HomeScreen() {
     router.replace(destination(store.session.role, record?.status));
   }, [router, store.founder, store.investor, store.ready, store.session]);
 
-  if (!store.ready || store.session) return <BootScreen />;
+  const [hydrationTimedOut, setHydrationTimedOut] = useState(false);
+  useEffect(() => {
+    const timer = window.setTimeout(() => setHydrationTimedOut(true), 2500);
+    return () => window.clearTimeout(timer);
+  }, []);
+
+  if (!store.ready && !hydrationTimedOut) return <BootScreen message="Loading…" />;
+
+  if (store.session) {
+    const record = store.session.role === "founder" ? store.founder : store.investor;
+    const href = destination(store.session.role, record?.status);
+    return (
+      <RedirectScreen href={href} message="Opening your workspace…" fallbackLabel="Open workspace" />
+    );
+  }
 
   function submit(event: React.FormEvent) {
     event.preventDefault();
@@ -54,13 +70,20 @@ function HomeScreen() {
   }
 
   return (
-    <div className="grid min-h-screen place-items-center bg-muted px-4 py-12">
-      <div className="w-full max-w-xl rounded-2xl border border-border bg-white px-6 py-10 sm:px-10">
-        <Logo size={64} />
-        <h1 className="mt-8 text-[1.75rem] leading-tight font-semibold tracking-tight">
+    <div className="blueprint-surface grid min-h-screen place-items-center px-4 py-12">
+      <GrainientCard
+        as="div"
+        className="w-full max-w-xl px-6 py-10 sm:px-10"
+        variant="webgl"
+        frost="light"
+        grainient={{ intro: true, speed: 0.5, grainAnimated: true }}
+      >
+        <Logo size={64} className="mb-8" />
+        <p className="text-meta">{mode === "signin" ? "Session restore" : "Account setup"}</p>
+        <h1 className="mt-2 text-[1.75rem] leading-tight font-bold tracking-tight">
           {mode === "signin" ? "Sign in" : "Welcome to VentureOS"}
         </h1>
-        <p className="mt-3 text-[15px] leading-6 text-muted-foreground">
+        <p className="mt-3 font-mono text-xs leading-5 text-muted-foreground">
           {mode === "signin"
             ? "Use the email you started with. Your onboarding progress is saved on this device."
             : "Choose how you will use VentureOS. Founders and investors keep separate profiles."}
@@ -79,17 +102,17 @@ function HomeScreen() {
                 aria-pressed={role === value}
                 onClick={() => setRole(value)}
                 className={cn(
-                  "rounded-xl border px-4 py-4 text-left",
-                  role === value ? "border-primary bg-primary-soft" : "border-border hover:bg-muted",
+                  "rounded-none border px-4 py-4 text-left",
+                  role === value ? "border-primary bg-[#f3f8ff]" : "border-hairline bg-white hover:border-primary/40",
                 )}
               >
-                <span className="block text-sm font-medium">{label}</span>
-                <span className="mt-1 block text-sm leading-5 text-muted-foreground">{copy}</span>
+                <span className="block text-sm font-bold">{label}</span>
+                <span className="mt-1 block font-mono text-[11px] leading-5 text-muted-foreground">{copy}</span>
               </button>
             ))}
           </div>
           <label className="flex flex-col gap-2 text-sm font-medium">
-            Email address
+            <span className="text-meta">Email address</span>
             <Input
               type="email"
               value={email}
@@ -101,10 +124,10 @@ function HomeScreen() {
               placeholder="you@company.com"
             />
           </label>
-          {error ? <p className="text-sm text-destructive">{error}</p> : null}
+          {error ? <p className="font-mono text-xs text-destructive">{error}</p> : null}
           <Button type="submit">{mode === "signin" ? "Sign in" : "Continue"}</Button>
         </form>
-        <p className="mt-6 text-sm text-muted-foreground">
+        <p className="mt-6 font-mono text-xs text-muted-foreground">
           {mode === "signin" ? "New to VentureOS?" : "Already have an account?"}{" "}
           <button
             type="button"
@@ -117,7 +140,7 @@ function HomeScreen() {
             {mode === "signin" ? "Create an account" : "Sign in"}
           </button>
         </p>
-      </div>
+      </GrainientCard>
     </div>
   );
 }

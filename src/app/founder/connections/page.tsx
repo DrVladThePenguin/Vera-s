@@ -50,7 +50,7 @@ export default function Page() {
 
 function Empty() {
   return (
-    <div className="rounded-2xl border border-border bg-white px-6 py-12 text-center">
+    <div className="panel px-6 py-12 text-center">
       <p className="font-medium">No active connections yet.</p>
       <p className="mt-2 text-sm text-muted-foreground">When an investor connects, the conversation will appear here.</p>
     </div>
@@ -72,13 +72,13 @@ function Thread({
   const [body, setBody] = useState("");
   const notes = store.db.notes.filter((note) => note.startupId === startupId && note.investorEmail === investorEmail);
   return (
-    <article className="rounded-2xl border border-border bg-white p-5">
+    <article className="panel p-5">
       <p className="font-medium">{title}</p>
       <p className="text-sm text-muted-foreground">{subtitle}</p>
       <ul className="mt-4 flex flex-col gap-3">
         {notes.length === 0 ? <li className="text-sm text-muted-foreground">No notes yet.</li> : null}
         {notes.map((note) => (
-          <li key={note.id} className="rounded-xl bg-muted px-4 py-3">
+          <li key={note.id} className="rounded-none bg-muted px-4 py-3">
             <p className="text-sm">{note.body}</p>
             <p className="mt-1 text-xs text-muted-foreground">
               {note.author === "founder" ? "You" : "Investor"} · {timeAgo(note.at)}

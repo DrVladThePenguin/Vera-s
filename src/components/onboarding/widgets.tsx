@@ -62,7 +62,7 @@ export function SelectField({
         onChange={(event) => onChange(event.target.value)}
         aria-invalid={invalid || undefined}
         className={cn(
-          "h-12 w-full appearance-none rounded-xl border bg-white px-3.5 pr-10 text-[15px] outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/15",
+          "h-12 w-full appearance-none rounded-none border-hairline border bg-white px-3.5 pr-10 text-[15px] outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/15",
           invalid ? "border-destructive" : "border-border",
           value ? "text-foreground" : "text-muted-foreground",
         )}
@@ -123,7 +123,7 @@ export function KindToggle({
   onChange: (value: "actual" | "estimate") => void;
 }) {
   return (
-    <div className="flex h-10 rounded-xl border border-border p-1">
+    <div className="flex h-10 rounded-none border-hairline border p-1">
       {(["actual", "estimate"] as const).map((kind) => (
         <button
           key={kind}
@@ -192,7 +192,7 @@ export function PhotoPicker({
       <div className="flex items-center gap-4">
         <PersonMark name={name} photo={photo} avatarId={avatarId} size={72} />
         <div className="flex flex-wrap items-center gap-3">
-          <label className="inline-flex h-10 cursor-pointer items-center rounded-xl border border-border px-3.5 text-sm font-medium hover:bg-muted">
+          <label className="inline-flex h-10 cursor-pointer items-center rounded-none border-hairline border px-3.5 text-sm font-medium hover:bg-muted">
             Upload photograph
             <input
               type="file"

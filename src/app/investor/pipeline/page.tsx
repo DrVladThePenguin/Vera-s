@@ -19,7 +19,7 @@ export default function Page() {
   if (decisions.length === 0) {
     return (
       <AppShell role="investor" title="Pipeline" subtitle="Startups you have marked.">
-        <div className="rounded-2xl border border-border bg-white px-6 py-12 text-center">
+        <div className="panel px-6 py-12 text-center">
           <p className="font-medium">Your pipeline is empty.</p>
           <Link href="/investor/discover" className="mt-3 inline-block text-sm font-medium text-primary">
             Discover startups
@@ -61,7 +61,7 @@ function DecisionSection({
   catalog: ReturnType<typeof useCatalog>;
 }) {
   return (
-    <section className="rounded-2xl border border-border bg-white p-5">
+    <section className="panel p-5">
       <div className="flex items-start justify-between gap-3">
         <div>
           <h2 className="text-base font-semibold tracking-tight">{title}</h2>

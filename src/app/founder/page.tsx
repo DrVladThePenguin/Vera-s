@@ -1,15 +1,7 @@
 "use client";
 
-import { AppShell } from "@/components/app/shell";
-import { FounderDashboard } from "@/components/app/founder-dashboard";
-import { useStore } from "@/lib/store";
+import { RedirectScreen } from "@/components/app/redirect-screen";
 
 export default function Page() {
-  const { founder } = useStore();
-  const first = founder?.founder.fullName.split(" ")[0] || "there";
-  return (
-    <AppShell role="founder" title={`Good to see you, ${first}`} subtitle="Your company profile and investor activity.">
-      <FounderDashboard />
-    </AppShell>
-  );
+  return <RedirectScreen href="/founder/investors" message="Opening discover…" fallbackLabel="Discover" />;
 }
