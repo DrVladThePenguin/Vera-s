@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
+import { RedirectScreen } from "@/components/app/redirect-screen";
 import { BootScreen, Logo } from "@/components/brand/logo";
 import { Button } from "@/components/ui/button";
 import { GrainientCard } from "@/components/ui/grainient-card";
@@ -31,8 +32,21 @@ function HomeScreen() {
     router.replace(destination(store.session.role, record?.status));
   }, [router, store.founder, store.investor, store.ready, store.session]);
 
-  if (!store.ready) return <BootScreen message="Loading…" />;
-  if (store.session) return <BootScreen message="Opening your workspace…" />;
+  const [hydrationTimedOut, setHydrationTimedOut] = useState(false);
+  useEffect(() => {
+    const timer = window.setTimeout(() => setHydrationTimedOut(true), 2500);
+    return () => window.clearTimeout(timer);
+  }, []);
+
+  if (!store.ready && !hydrationTimedOut) return <BootScreen message="Loading…" />;
+
+  if (store.session) {
+    const record = store.session.role === "founder" ? store.founder : store.investor;
+    const href = destination(store.session.role, record?.status);
+    return (
+      <RedirectScreen href={href} message="Opening your workspace…" fallbackLabel="Open workspace" />
+    );
+  }
 
   function submit(event: React.FormEvent) {
     event.preventDefault();

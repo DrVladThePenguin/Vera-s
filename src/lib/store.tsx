@@ -165,6 +165,19 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
+    if (!ready || !db.session) return;
+    const { role, email } = db.session;
+    const missing =
+      role === "founder" ? !db.founders[email] : !db.investors[email];
+    if (!missing) return;
+    if (role === "founder") {
+      dispatch({ type: "upsert-founder", email, draft: emptyFounder(email) });
+    } else {
+      dispatch({ type: "upsert-investor", email, draft: emptyInvestor(email) });
+    }
+  }, [db.founders, db.investors, db.session, ready]);
+
+  useEffect(() => {
     if (!ready) return;
     try {
       localStorage.setItem(KEY, JSON.stringify(db));

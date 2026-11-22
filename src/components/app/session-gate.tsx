@@ -2,6 +2,7 @@
 
 import { useEffect, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
+import { RedirectScreen } from "@/components/app/redirect-screen";
 import { BootScreen, Logo } from "@/components/brand/logo";
 import { Button } from "@/components/ui/button";
 import { useStore } from "@/lib/store";
@@ -38,11 +39,13 @@ export function SessionGate({
   }
 
   if (!store.session) {
-    return <BootScreen message="Redirecting to sign in…" />;
+    return <RedirectScreen href="/" message="Redirecting to sign in…" fallbackLabel="Sign in" />;
   }
 
   if (store.session.role !== role) {
-    return <BootScreen message="Opening your workspace…" />;
+    const href =
+      store.session.role === "founder" ? "/founder/investors" : "/investor/discover";
+    return <RedirectScreen href={href} message="Opening your workspace…" fallbackLabel="Continue" />;
   }
 
   if (!record || record.status !== "complete") {

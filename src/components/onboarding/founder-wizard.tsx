@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { X } from "lucide-react";
+import { RedirectScreen } from "@/components/app/redirect-screen";
 import { BootScreen } from "@/components/brand/logo";
 import { OnboardingShell } from "@/components/onboarding/shell";
 import {
@@ -139,7 +140,11 @@ export function FounderWizard() {
   }, [localStep, draft?.step]);
 
   if (!store.ready || !draft || !store.session || store.session.role !== "founder") return <BootScreen />;
-  if (draft.status === "complete" && !edit) return <BootScreen />;
+  if (draft.status === "complete" && !edit) {
+    return (
+      <RedirectScreen href="/founder/investors" message="Opening discover…" fallbackLabel="Go to Discover" />
+    );
+  }
   const profile: FounderDraft = draft;
 
   const editing = draft.status === "complete" && edit > 0;

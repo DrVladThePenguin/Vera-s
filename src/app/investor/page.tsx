@@ -1,13 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { BootScreen } from "@/components/brand/logo";
+import { RedirectScreen } from "@/components/app/redirect-screen";
 
 export default function Page() {
-  const router = useRouter();
-  useEffect(() => {
-    router.replace("/investor/discover");
-  }, [router]);
-  return <BootScreen />;
+  return <RedirectScreen href="/investor/discover" message="Opening discover…" fallbackLabel="Discover" />;
 }

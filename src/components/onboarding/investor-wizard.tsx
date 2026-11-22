@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { RedirectScreen } from "@/components/app/redirect-screen";
 import { BootScreen } from "@/components/brand/logo";
 import { OnboardingShell } from "@/components/onboarding/shell";
 import { AreaInput, Chips, count, Field, PersonMark, PhotoPicker, SelectField, TextInput } from "@/components/onboarding/widgets";
@@ -78,7 +79,11 @@ export function InvestorWizard() {
   }, [localStep, draft?.step]);
 
   if (!store.ready || !draft || store.session?.role !== "investor") return <BootScreen />;
-  if (draft.status === "complete" && !edit) return <BootScreen />;
+  if (draft.status === "complete" && !edit) {
+    return (
+      <RedirectScreen href="/investor/discover" message="Opening discover…" fallbackLabel="Go to Discover" />
+    );
+  }
   const profile: InvestorDraft = draft;
 
   const editing = draft.status === "complete" && edit > 0;
