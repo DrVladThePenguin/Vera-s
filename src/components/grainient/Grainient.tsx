@@ -383,14 +383,36 @@ const Grainient = ({
     const fu = field.uniforms;
     const cu = composite.uniforms;
     const vao = gl.createVertexArray();
+    if (!vao) return undefined;
     const target = gl.createTexture();
+    if (!target) return undefined;
     gl.bindTexture(gl.TEXTURE_2D, target);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
     const buffer = gl.createFramebuffer();
+    if (!buffer) return undefined;
     const fieldSize = { width: 0, height: 0 };
+
+    const u1f = (loc: WebGLUniformLocation | null | undefined, value: number) => {
+      if (loc) gl.uniform1f(loc, value);
+    };
+    const u1i = (loc: WebGLUniformLocation | null | undefined, value: number) => {
+      if (loc) gl.uniform1i(loc, value);
+    };
+    const u2f = (loc: WebGLUniformLocation | null | undefined, a: number, b: number) => {
+      if (loc) gl.uniform2f(loc, a, b);
+    };
+    const u3fv = (loc: WebGLUniformLocation | null | undefined, value: Float32Array) => {
+      if (loc) gl.uniform3fv(loc, value);
+    };
+    const u4fv = (loc: WebGLUniformLocation | null | undefined, value: Float32Array) => {
+      if (loc) gl.uniform4fv(loc, value);
+    };
+    const u1fv = (loc: WebGLUniformLocation | null | undefined, value: Float32Array) => {
+      if (loc) gl.uniform1fv(loc, value);
+    };
 
     const probe = document.createElement('canvas').getContext('2d', { willReadFrequently: true });
     const colorCache = new Map<string, number[]>();
@@ -456,37 +478,37 @@ const Grainient = ({
       gl.bindFramebuffer(gl.FRAMEBUFFER, buffer);
       gl.viewport(0, 0, fieldSize.width, fieldSize.height);
       gl.useProgram(field.program);
-      gl.uniform1f(fu.uAspect, aspect);
-      gl.uniform1f(fu.uTime, time);
-      gl.uniform3fv(fu.uRamp, ramp);
-      gl.uniform1i(fu.uCount, s.colors.length);
+      u1f(fu.uAspect, aspect);
+      u1f(fu.uTime, time);
+      u3fv(fu.uRamp, ramp);
+      u1i(fu.uCount, s.colors.length);
       const radians = (s.angle * Math.PI) / 180;
-      gl.uniform1i(fu.uType, s.type);
-      gl.uniform2f(fu.uDir, Math.sin(radians), Math.cos(radians));
-      gl.uniform1f(fu.uExtent, aspect * Math.abs(Math.sin(radians)) + Math.abs(Math.cos(radians)));
-      gl.uniform1f(fu.uBands, s.bands);
-      gl.uniform1f(fu.uSoftness, s.softness);
-      gl.uniform1f(fu.uFlow, s.flow);
-      gl.uniform1f(fu.uScale, s.scale);
-      gl.uniform1f(fu.uSilk, s.silk);
-      gl.uniform4fv(fu.uStir, stirs);
-      gl.uniform1fv(fu.uStirWeight, stirWeights);
-      gl.uniform4fv(fu.uTwirl, twirls);
-      gl.uniform2f(fu.uSeed, s.variation * 3.17, s.variation * 1.91);
-      gl.uniform1f(fu.uContrast, s.contrast);
-      gl.uniform1f(fu.uSaturation, s.saturation);
-      gl.uniform1f(fu.uSettle, introClock * introClock * (3 - 2 * introClock));
-      gl.uniform1f(fu.uReveal, introClock);
+      u1i(fu.uType, s.type);
+      u2f(fu.uDir, Math.sin(radians), Math.cos(radians));
+      u1f(fu.uExtent, aspect * Math.abs(Math.sin(radians)) + Math.abs(Math.cos(radians)));
+      u1f(fu.uBands, s.bands);
+      u1f(fu.uSoftness, s.softness);
+      u1f(fu.uFlow, s.flow);
+      u1f(fu.uScale, s.scale);
+      u1f(fu.uSilk, s.silk);
+      u4fv(fu.uStir, stirs);
+      u1fv(fu.uStirWeight, stirWeights);
+      u4fv(fu.uTwirl, twirls);
+      u2f(fu.uSeed, s.variation * 3.17, s.variation * 1.91);
+      u1f(fu.uContrast, s.contrast);
+      u1f(fu.uSaturation, s.saturation);
+      u1f(fu.uSettle, introClock * introClock * (3 - 2 * introClock));
+      u1f(fu.uReveal, introClock);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
       gl.bindFramebuffer(gl.FRAMEBUFFER, null);
       gl.viewport(0, 0, canvas.width, canvas.height);
       gl.useProgram(composite.program);
       gl.activeTexture(gl.TEXTURE0);
       gl.bindTexture(gl.TEXTURE_2D, target);
-      gl.uniform1i(cu.uField, 0);
-      gl.uniform1f(cu.uGrain, s.grainAmount);
-      gl.uniform1f(cu.uGrainSize, s.grainSize * view.ratio);
-      gl.uniform1f(cu.uFrame, frameSeed);
+      u1i(cu.uField, 0);
+      u1f(cu.uGrain, s.grainAmount);
+      u1f(cu.uGrainSize, s.grainSize * view.ratio);
+      u1f(cu.uFrame, frameSeed);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
     };
 
@@ -673,7 +695,29 @@ const Grainient = ({
 
   useEffect(() => {
     wakeRef.current?.();
-  });
+  }, [
+    angle,
+    bands,
+    clickSwirl,
+    colors,
+    contrast,
+    dpr,
+    flow,
+    grainAmount,
+    grainAnimated,
+    grainSize,
+    interactive,
+    intro,
+    lightMode,
+    saturation,
+    scale,
+    silk,
+    softness,
+    speed,
+    stir,
+    type,
+    variation,
+  ]);
 
   return (
     <div

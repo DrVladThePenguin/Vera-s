@@ -60,8 +60,9 @@ function HomeScreen() {
       <GrainientCard
         as="div"
         className="w-full max-w-xl px-6 py-10 sm:px-10"
+        variant="webgl"
         tint="medium"
-        grainient={{ intro: true, speed: 0.5 }}
+        grainient={{ intro: true, speed: 0.5, grainAnimated: true }}
       >
         <Logo size={64} className="mb-8" />
         <p className="text-meta">{mode === "signin" ? "Session restore" : "Account setup"}</p>
