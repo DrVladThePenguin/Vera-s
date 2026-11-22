@@ -128,10 +128,11 @@ export function FounderWizard() {
 
   useEffect(() => {
     if (!store.ready) return;
-    if (!store.session || store.session.role !== "founder" || !draft) {
+    if (!store.session || store.session.role !== "founder") {
       router.replace("/");
       return;
     }
+    if (!draft) return;
     if (draft.status === "complete" && !edit) router.replace("/founder/investors");
   }, [draft, edit, router, store.ready, store.session]);
 
@@ -139,7 +140,9 @@ export function FounderWizard() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [localStep, draft?.step]);
 
-  if (!store.ready || !draft || !store.session || store.session.role !== "founder") return <BootScreen />;
+  if (!store.ready) return <BootScreen message="Loading your profile…" />;
+  if (!store.session || store.session.role !== "founder") return <BootScreen />;
+  if (!draft) return <BootScreen message="Preparing your founder profile…" />;
   if (draft.status === "complete" && !edit) {
     return (
       <RedirectScreen href="/founder/investors" message="Opening discover…" fallbackLabel="Go to Discover" />

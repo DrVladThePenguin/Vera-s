@@ -67,10 +67,11 @@ export function InvestorWizard() {
 
   useEffect(() => {
     if (!store.ready) return;
-    if (!store.session || store.session.role !== "investor" || !draft) {
+    if (!store.session || store.session.role !== "investor") {
       router.replace("/");
       return;
     }
+    if (!draft) return;
     if (draft.status === "complete" && !edit) router.replace("/investor/discover");
   }, [draft, edit, router, store.ready, store.session]);
 
@@ -78,7 +79,9 @@ export function InvestorWizard() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [localStep, draft?.step]);
 
-  if (!store.ready || !draft || store.session?.role !== "investor") return <BootScreen />;
+  if (!store.ready) return <BootScreen message="Loading your profile…" />;
+  if (!store.session || store.session.role !== "investor") return <BootScreen />;
+  if (!draft) return <BootScreen message="Preparing your investor profile…" />;
   if (draft.status === "complete" && !edit) {
     return (
       <RedirectScreen href="/investor/discover" message="Opening discover…" fallbackLabel="Go to Discover" />
