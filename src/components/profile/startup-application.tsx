@@ -11,6 +11,7 @@ import {
   MapPin,
 } from "lucide-react";
 import { PersonMark } from "@/components/onboarding/widgets";
+import { GrainientCard } from "@/components/ui/grainient-card";
 import { DemoFrame } from "@/components/profile/startup-profile";
 import type { PublicStartup, UploadedDoc } from "@/lib/types";
 import { cn, formatBytes } from "@/lib/utils";
@@ -738,7 +739,7 @@ export function StartupApplicationPanel({
       <div className="mb-3 xl:hidden">
         <StartupToc id="startup-toc-mobile" activeId={activeId} onNavigate={navigate} />
       </div>
-      <article className="overflow-hidden panel ">
+      <GrainientCard as="article" className="overflow-hidden" tint="subtle" grainient={{ flow: 0.65, scale: 1.15 }}>
         <header className="border-b border-border px-5 py-5 sm:px-7 sm:py-6">
           <StartupApplicationHeader startup={startup} />
         </header>
@@ -752,7 +753,7 @@ export function StartupApplicationPanel({
             </div>
           </aside>
         </div>
-      </article>
+      </GrainientCard>
     </div>
   );
 }

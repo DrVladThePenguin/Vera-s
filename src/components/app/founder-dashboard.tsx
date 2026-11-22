@@ -1,6 +1,7 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
+import { GrainientCard } from "@/components/ui/grainient-card";
 import { ChartCard, DistributionChart, InterestChart, RatioChart, ViewsChart } from "@/components/app/charts";
 import {
   BASE_METRICS,
@@ -67,10 +68,10 @@ export function FounderDashboard() {
       </div>
       <div className="grid gap-px bg-border sm:grid-cols-2 xl:grid-cols-3">
         {metrics.map((metric) => (
-          <article key={metric.label} className="panel bg-white p-5">
+          <GrainientCard key={metric.label} className="bg-white p-5" tint="subtle">
             <p className="text-meta">{metric.label}</p>
             <p className="mt-3 font-display text-3xl font-bold tracking-tight tabular-nums">{metric.value}</p>
-          </article>
+          </GrainientCard>
         ))}
       </div>
       <div className="grid gap-4 xl:grid-cols-2">
@@ -89,7 +90,7 @@ export function FounderDashboard() {
         <ChartCard title="Investor industry distribution">
           <DistributionChart data={INDUSTRY_DISTRIBUTION} />
         </ChartCard>
-        <section className="panel p-5">
+        <GrainientCard as="section" className="p-5" tint="subtle">
           <h2 className="mb-4 text-base font-bold">Recent investor activity</h2>
           <ul className="flex max-h-64 flex-col gap-3 overflow-auto">
             {activity.map((item) => (
@@ -102,7 +103,7 @@ export function FounderDashboard() {
               </li>
             ))}
           </ul>
-        </section>
+        </GrainientCard>
       </div>
     </div>
   );

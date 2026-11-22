@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { LogOut } from "lucide-react";
 import { PersonMark } from "@/components/onboarding/widgets";
 import { Button } from "@/components/ui/button";
+import { GrainientCard } from "@/components/ui/grainient-card";
 import { useStore } from "@/lib/store";
 import type { Role } from "@/lib/types";
 
@@ -21,7 +22,7 @@ export function AccountSettings({ role }: { role: Role }) {
 
   return (
     <div className="flex max-w-lg flex-col gap-6">
-      <section className="panel p-6">
+      <GrainientCard as="section" className="p-6" tint="subtle">
         <p className="text-meta mb-4">Account</p>
         <div className="flex items-center gap-4">
           <PersonMark
@@ -38,9 +39,9 @@ export function AccountSettings({ role }: { role: Role }) {
             </p>
           </div>
         </div>
-      </section>
+      </GrainientCard>
 
-      <section className="panel divide-y divide-border">
+      <GrainientCard as="section" className="divide-y divide-border" tint="subtle">
         <div className="flex flex-col gap-2 p-5 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-sm font-bold">Profile details</p>
@@ -62,7 +63,7 @@ export function AccountSettings({ role }: { role: Role }) {
           </div>
           <p className="text-meta normal-case">Email change not available in demo</p>
         </div>
-      </section>
+      </GrainientCard>
 
       <Button
         variant="outline"

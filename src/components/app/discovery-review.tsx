@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Check, CheckCircle2, Undo2, X } from "lucide-react";
 import { matchScore, useCatalog } from "@/components/app/catalog";
 import { StartupApplicationPanel } from "@/components/profile/startup-application";
+import { GrainientCard } from "@/components/ui/grainient-card";
 import { useStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
@@ -105,7 +106,7 @@ export function DiscoveryReview({ onBrowse }: { onBrowse?: () => void }) {
   if (queue.length === 0 || !current) {
     return (
       <div ref={topRef} className="flex flex-col gap-4">
-        <div className="panel px-6 py-16 text-center">
+        <GrainientCard as="div" className="px-6 py-16 text-center" tint="medium" grainient={{ variation: 2 }}>
           <span className="mx-auto grid size-12 place-items-center rounded-full bg-primary-soft text-primary">
             <CheckCircle2 className="size-6" />
           </span>
@@ -131,7 +132,7 @@ export function DiscoveryReview({ onBrowse }: { onBrowse?: () => void }) {
               </button>
             ) : null}
           </div>
-        </div>
+        </GrainientCard>
         <DecisionToast decision={lastDecision} onUndo={undo} onDismiss={() => setLastDecision(null)} />
       </div>
     );

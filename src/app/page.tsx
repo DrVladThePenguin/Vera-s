@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { BootScreen, Logo } from "@/components/brand/logo";
 import { Button } from "@/components/ui/button";
+import { GrainientCard } from "@/components/ui/grainient-card";
 import { Input } from "@/components/ui/input";
 import { useStore } from "@/lib/store";
 import type { Role } from "@/lib/types";
@@ -56,7 +57,12 @@ function HomeScreen() {
 
   return (
     <div className="blueprint-surface grid min-h-screen place-items-center px-4 py-12">
-      <div className="panel w-full max-w-xl px-6 py-10 sm:px-10">
+      <GrainientCard
+        as="div"
+        className="w-full max-w-xl px-6 py-10 sm:px-10"
+        tint="medium"
+        grainient={{ intro: true, speed: 0.5 }}
+      >
         <Logo size={64} className="mb-8" />
         <p className="text-meta">{mode === "signin" ? "Session restore" : "Account setup"}</p>
         <h1 className="mt-2 text-[1.75rem] leading-tight font-bold tracking-tight">
@@ -119,7 +125,7 @@ function HomeScreen() {
             {mode === "signin" ? "Create an account" : "Sign in"}
           </button>
         </p>
-      </div>
+      </GrainientCard>
     </div>
   );
 }
