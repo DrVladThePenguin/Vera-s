@@ -228,6 +228,25 @@ body {
   animation: grainient-fallback-shift 16s ease-in-out infinite;
 }
 
+.grainient-discover {
+  background:
+    linear-gradient(130deg, #3a3441 0%, #0066ff 42%, #3385ff 58%, #d9e7e0 78%, #ffffff 100%),
+    linear-gradient(48deg, #d9e7e0 0%, #0066ff 38%, #3a3441 72%, #0066ff 100%);
+  background-size: 170% 170%, 150% 150%;
+  background-position: 20% 45%, 80% 55%;
+  animation: grainient-discover-shift 20s ease-in-out infinite;
+}
+
+@keyframes grainient-discover-shift {
+  0%,
+  100% {
+    background-position: 15% 40%, 85% 50%;
+  }
+  50% {
+    background-position: 85% 60%, 15% 45%;
+  }
+}
+
 @keyframes grainient-fallback-shift {
   0%,
   100% {
@@ -239,7 +258,8 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .grainient-fallback {
+  .grainient-fallback,
+  .grainient-discover {
     animation: none;
     background-size: 100% 100%;
   }

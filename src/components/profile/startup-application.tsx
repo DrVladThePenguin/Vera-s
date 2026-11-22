@@ -739,7 +739,13 @@ export function StartupApplicationPanel({
       <div className="mb-3 xl:hidden">
         <StartupToc id="startup-toc-mobile" activeId={activeId} onNavigate={navigate} />
       </div>
-      <GrainientCard as="article" className="overflow-hidden" frost="default">
+      <GrainientCard
+        as="article"
+        className="overflow-hidden"
+        variant="webgl"
+        palette="discover"
+        frost="light"
+      >
         <header className="border-b border-border px-5 py-5 sm:px-7 sm:py-6">
           <StartupApplicationHeader startup={startup} />
         </header>
