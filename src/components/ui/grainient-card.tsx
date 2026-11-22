@@ -35,43 +35,53 @@ export const VERA_GRAINIENT: Pick<
   grainAnimated: false,
 };
 
-const TINT = {
-  subtle: "opacity-[0.22]",
-  medium: "opacity-[0.38]",
-  bold: "opacity-[0.55]",
+/** Frosted content layer so the gradient stays visible at the card edges. */
+const FROST = {
+  light: "bg-white/55",
+  default: "bg-white/68",
+  solid: "bg-white/82",
 } as const;
 
 /**
  * Browsers cap concurrent WebGL contexts (~8–16). Most cards use CSS `variant="css"`;
- * use `variant="webgl"` only on hero surfaces (e.g. sign-in).
+ * use `variant="webgl"` on hero surfaces (e.g. sign-in).
  */
 export function GrainientCard({
   children,
   className,
-  tint = "medium",
+  frost = "default",
   grainient,
   variant = "css",
   as: Tag = "article",
 }: {
   children: ReactNode;
   className?: string;
-  tint?: keyof typeof TINT;
+  frost?: keyof typeof FROST;
   grainient?: Partial<GrainientProps>;
   variant?: "css" | "webgl";
   as?: "article" | "section" | "div";
 }) {
   return (
-    <Tag className={cn("panel relative overflow-hidden bg-white", className)}>
-      <div
-        className={cn(
-          "pointer-events-none absolute inset-0",
-          variant === "css" ? cn("grainient-fallback", TINT[tint]) : TINT[tint],
+    <Tag className={cn("panel relative overflow-hidden", className)}>
+      <div className="pointer-events-none absolute inset-0 min-h-full" aria-hidden>
+        {variant === "css" ? (
+          <div className="grainient-fallback size-full min-h-full" />
+        ) : (
+          <>
+            <div className="grainient-fallback size-full min-h-full opacity-90" />
+            <CardGrainientWebGL grainient={grainient} />
+          </>
         )}
-        aria-hidden
-      >
-        {variant === "webgl" ? <Grainient {...VERA_GRAINIENT} {...grainient} /> : null}
       </div>
-      <div className="relative z-[1]">{children}</div>
+      <div className={cn("relative z-[1] min-h-full", FROST[frost])}>{children}</div>
     </Tag>
+  );
+}
+
+function CardGrainientWebGL({ grainient }: { grainient?: Partial<GrainientProps> }) {
+  return (
+    <div className="absolute inset-0 mix-blend-multiply opacity-95">
+      <Grainient {...VERA_GRAINIENT} {...grainient} />
+    </div>
   );
 }

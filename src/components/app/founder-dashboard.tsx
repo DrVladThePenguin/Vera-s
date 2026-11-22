@@ -68,7 +68,7 @@ export function FounderDashboard() {
       </div>
       <div className="grid gap-px bg-border sm:grid-cols-2 xl:grid-cols-3">
         {metrics.map((metric) => (
-          <GrainientCard key={metric.label} className="bg-white p-5" tint="subtle">
+          <GrainientCard key={metric.label} className="p-5" frost="light">
             <p className="text-meta">{metric.label}</p>
             <p className="mt-3 font-display text-3xl font-bold tracking-tight tabular-nums">{metric.value}</p>
           </GrainientCard>
@@ -90,7 +90,7 @@ export function FounderDashboard() {
         <ChartCard title="Investor industry distribution">
           <DistributionChart data={INDUSTRY_DISTRIBUTION} />
         </ChartCard>
-        <GrainientCard as="section" className="p-5" tint="subtle">
+        <GrainientCard as="section" className="p-5" frost="light">
           <h2 className="mb-4 text-base font-bold">Recent investor activity</h2>
           <ul className="flex max-h-64 flex-col gap-3 overflow-auto">
             {activity.map((item) => (

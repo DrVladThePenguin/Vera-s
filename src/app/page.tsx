@@ -75,7 +75,7 @@ function HomeScreen() {
         as="div"
         className="w-full max-w-xl px-6 py-10 sm:px-10"
         variant="webgl"
-        tint="medium"
+        frost="light"
         grainient={{ intro: true, speed: 0.5, grainAnimated: true }}
       >
         <Logo size={64} className="mb-8" />

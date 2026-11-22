@@ -20,7 +20,7 @@ const BLUE = ["#0066FF", "#3385FF", "#66A3FF", "#99C2FF", "#CCE0FF", "#171717"];
 
 export function ChartCard({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <GrainientCard as="section" className="p-5" tint="subtle">
+    <GrainientCard as="section" className="p-5" frost="light">
       <h2 className="text-meta mb-4 text-foreground normal-case">{title}</h2>
       <div className="relative z-[1] h-64">{children}</div>
     </GrainientCard>

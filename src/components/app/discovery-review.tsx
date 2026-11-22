@@ -106,7 +106,7 @@ export function DiscoveryReview({ onBrowse }: { onBrowse?: () => void }) {
   if (queue.length === 0 || !current) {
     return (
       <div ref={topRef} className="flex flex-col gap-4">
-        <GrainientCard as="div" className="px-6 py-16 text-center" tint="medium" grainient={{ variation: 2 }}>
+        <GrainientCard as="div" className="px-6 py-16 text-center" frost="light" variant="css">
           <span className="mx-auto grid size-12 place-items-center rounded-full bg-primary-soft text-primary">
             <CheckCircle2 className="size-6" />
           </span>

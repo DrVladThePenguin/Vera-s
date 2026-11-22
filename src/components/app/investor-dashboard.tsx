@@ -31,7 +31,7 @@ export function InvestorDashboard() {
       <p className="text-meta normal-case">Sample market charts · live decision counts</p>
       <div className="grid gap-px bg-border sm:grid-cols-2 xl:grid-cols-4">
         {metrics.map((metric) => (
-          <GrainientCard key={metric.label} className="bg-white p-5" tint="subtle">
+          <GrainientCard key={metric.label} className="p-5" frost="light">
             <p className="text-meta">{metric.label}</p>
             <p className="mt-3 font-display text-3xl font-bold tracking-tight tabular-nums">{metric.value}</p>
           </GrainientCard>
@@ -51,7 +51,7 @@ export function InvestorDashboard() {
         <ChartCard title="Industries in discovery">
           <DistributionChart data={INDUSTRY_DISTRIBUTION} />
         </ChartCard>
-        <GrainientCard as="section" className="p-5" tint="subtle">
+        <GrainientCard as="section" className="p-5" frost="light">
           <h2 className="mb-4 text-base font-bold">Suggested for your focus</h2>
           <ul className="flex flex-col gap-3">
             {recommended.map((startup) => (

@@ -22,7 +22,7 @@ export function AccountSettings({ role }: { role: Role }) {
 
   return (
     <div className="flex max-w-lg flex-col gap-6">
-      <GrainientCard as="section" className="p-6" tint="subtle">
+      <GrainientCard as="section" className="p-6" frost="light">
         <p className="text-meta mb-4">Account</p>
         <div className="flex items-center gap-4">
           <PersonMark
@@ -41,7 +41,7 @@ export function AccountSettings({ role }: { role: Role }) {
         </div>
       </GrainientCard>
 
-      <GrainientCard as="section" className="divide-y divide-border" tint="subtle">
+      <GrainientCard as="section" className="divide-y divide-border" frost="light">
         <div className="flex flex-col gap-2 p-5 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-sm font-bold">Profile details</p>
