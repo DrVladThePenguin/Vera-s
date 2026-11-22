@@ -131,7 +131,7 @@ export function FounderWizard() {
       router.replace("/");
       return;
     }
-    if (draft.status === "complete" && !edit) router.replace("/founder");
+    if (draft.status === "complete" && !edit) router.replace("/founder/investors");
   }, [draft, edit, router, store.ready, store.session]);
 
   useEffect(() => {
@@ -166,7 +166,7 @@ export function FounderWizard() {
   function onNext() {
     if (step === 12) {
       update((current) => ({ ...current, status: "complete", step: 12 }));
-      router.push("/founder");
+      router.push("/founder/investors");
       return;
     }
     const nextErrors = validateFounderStep(step, profile);

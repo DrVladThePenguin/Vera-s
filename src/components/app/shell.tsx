@@ -3,28 +3,35 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Building2, Compass, Files, LayoutDashboard, Link2, LogOut, UserRound, Users } from "lucide-react";
+import { Compass, Link2, Settings, UserRound } from "lucide-react";
 import { BootScreen, Logo } from "@/components/brand/logo";
+import { PersonMark } from "@/components/onboarding/widgets";
 import { useStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 import type { Role } from "@/lib/types";
 
-const NAV = {
-  founder: [
-    { href: "/founder", label: "Dashboard", icon: LayoutDashboard },
-    { href: "/founder/profile", label: "Company profile", icon: Building2 },
-    { href: "/founder/investors", label: "Investors", icon: Users },
-    { href: "/founder/connections", label: "Connections", icon: Link2 },
-    { href: "/founder/documents", label: "Documents", icon: Files },
-  ],
+const NAV: Record<
+  Role,
+  { href: string; label: string; icon: typeof Compass }[]
+> = {
   investor: [
-    { href: "/investor", label: "Dashboard", icon: LayoutDashboard },
     { href: "/investor/discover", label: "Discover", icon: Compass },
-    { href: "/investor/pipeline", label: "Pipeline", icon: Users },
     { href: "/investor/connections", label: "Connections", icon: Link2 },
     { href: "/investor/profile", label: "Profile", icon: UserRound },
   ],
+  founder: [
+    { href: "/founder/investors", label: "Discover", icon: Compass },
+    { href: "/founder/connections", label: "Connections", icon: Link2 },
+    { href: "/founder/profile", label: "Profile", icon: UserRound },
+  ],
 };
+
+function profilePaths(role: Role) {
+  return {
+    settings: role === "founder" ? "/founder/settings" : "/investor/settings",
+    profile: role === "founder" ? "/founder/profile" : "/investor/profile",
+  };
+}
 
 export function AppShell({
   role,
@@ -41,6 +48,7 @@ export function AppShell({
   const router = useRouter();
   const pathname = usePathname();
   const record = role === "founder" ? store.founder : store.investor;
+  const paths = profilePaths(role);
 
   useEffect(() => {
     if (!store.ready) return;
@@ -49,7 +57,7 @@ export function AppShell({
       return;
     }
     if (store.session.role !== role) {
-      router.replace(store.session.role === "founder" ? "/founder" : "/investor");
+      router.replace(store.session.role === "founder" ? "/founder/investors" : "/investor/discover");
       return;
     }
     if (record?.status !== "complete") {
@@ -61,27 +69,25 @@ export function AppShell({
     return <BootScreen />;
   }
 
-  const name = role === "founder" ? store.founder?.founder.fullName : store.investor?.fullName;
+  const displayName =
+    role === "founder" ? store.founder?.founder.fullName : store.investor?.fullName;
+  const photo = role === "founder" ? store.founder?.founder.photoDataUrl : store.investor?.photoDataUrl;
+  const avatarId = role === "founder" ? store.founder?.founder.avatarId : store.investor?.avatarId;
 
   return (
     <div className="blueprint-surface min-h-screen lg:grid lg:grid-cols-[248px_1fr]">
       <aside className="flex flex-col border-hairline border-b bg-white lg:min-h-screen lg:border-r lg:border-b-0">
-        <div className="blueprint-rail flex items-center gap-3 px-5 py-5">
-          <Logo size={36} />
-          <div>
-            <p className="font-display text-sm font-bold">VentureOS</p>
-            <p className="text-meta mt-0.5">{role === "founder" ? "Founder workspace" : "Investor workspace"}</p>
-          </div>
+        <div className="blueprint-rail px-5 py-5">
+          <Link href={NAV[role][0].href} aria-label="Home" className="inline-flex">
+            <Logo size={40} />
+          </Link>
         </div>
         <nav
           aria-label="Main"
           className="flex gap-0 overflow-x-auto px-2 py-3 [scrollbar-width:none] lg:flex-1 lg:flex-col [&::-webkit-scrollbar]:hidden"
         >
           {NAV[role].map((item) => {
-            const active =
-              item.href === "/founder" || item.href === "/investor"
-                ? pathname === item.href
-                : pathname === item.href || pathname.startsWith(`${item.href}/`);
+            const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
             const Icon = item.icon;
             return (
               <Link
@@ -90,8 +96,8 @@ export function AppShell({
                 className={cn(
                   "flex items-center gap-2 rounded-none border border-transparent px-3 py-2.5 text-sm font-medium whitespace-nowrap",
                   active
-                    ? "border-hairline border bg-primary-soft font-semibold text-primary"
-                    : "text-foreground hover:border-hairline hover:border hover:bg-muted",
+                    ? "border-hairline border bg-primary font-semibold text-primary-foreground"
+                    : "text-foreground hover:border-hairline hover:border hover:bg-primary/[0.04]",
                 )}
               >
                 <Icon size={16} strokeWidth={1.5} />
@@ -100,24 +106,35 @@ export function AppShell({
             );
           })}
         </nav>
-        <div className="blueprint-rail flex items-center justify-between gap-3 px-3 py-4 lg:mt-auto">
-          <p className="truncate px-2 font-mono text-[10px] text-muted-foreground">{name || store.session.email}</p>
-          <button
-            type="button"
-            className="inline-flex h-10 items-center gap-2 rounded-none border border-transparent px-3 text-sm hover:border-hairline hover:border hover:bg-muted"
-            onClick={() => {
-              store.signOut();
-              router.push("/");
-            }}
+        <div className="blueprint-rail mt-auto flex flex-col gap-3 px-4 py-4">
+          <div className="flex items-center gap-3">
+            <PersonMark
+              name={displayName || store.session.email}
+              photo={photo}
+              avatarId={avatarId}
+              size={40}
+            />
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-sm font-bold">{displayName || "Account"}</p>
+              <p className="truncate font-mono text-[10px] text-muted-foreground">{store.session.email}</p>
+            </div>
+          </div>
+          <Link
+            href={paths.settings}
+            className={cn(
+              "inline-flex h-10 w-full items-center justify-center gap-2 rounded-none border text-sm font-medium transition",
+              pathname === paths.settings
+                ? "border-primary bg-primary text-primary-foreground"
+                : "border-hairline text-foreground hover:border-primary hover:text-primary",
+            )}
           >
-            <LogOut size={16} strokeWidth={1.5} />
-            Sign out
-          </button>
+            <Settings size={16} strokeWidth={1.5} />
+            Settings
+          </Link>
         </div>
       </aside>
-      <main className="border-hairline border-transparent px-4 py-6 sm:px-8 sm:py-8 lg:border-l">
+      <main className="border-hairline border-transparent bg-white px-4 py-6 sm:px-8 sm:py-8 lg:border-l">
         <header className="mb-8 border-hairline border-b pb-6">
-          <p className="text-meta mb-2">{role === "founder" ? "Founder" : "Investor"}</p>
           <h1 className="text-2xl font-bold tracking-tight">{title}</h1>
           {subtitle ? <p className="mt-2 font-mono text-xs text-muted-foreground">{subtitle}</p> : null}
         </header>

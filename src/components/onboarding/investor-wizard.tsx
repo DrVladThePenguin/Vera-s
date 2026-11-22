@@ -70,7 +70,7 @@ export function InvestorWizard() {
       router.replace("/");
       return;
     }
-    if (draft.status === "complete" && !edit) router.replace("/investor");
+    if (draft.status === "complete" && !edit) router.replace("/investor/discover");
   }, [draft, edit, router, store.ready, store.session]);
 
   useEffect(() => {
@@ -107,7 +107,7 @@ export function InvestorWizard() {
   function onNext() {
     if (step === 7) {
       update((current) => ({ ...current, status: "complete", step: 7 }));
-      router.push("/investor");
+      router.push("/investor/discover");
       return;
     }
     const nextErrors = validateInvestorStep(step, profile);

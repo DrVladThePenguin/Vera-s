@@ -11,8 +11,8 @@ import type { Role } from "@/lib/types";
 import { cn, isEmail } from "@/lib/utils";
 
 function destination(role: Role, status?: string) {
-  if (role === "founder") return status === "complete" ? "/founder" : "/onboarding";
-  return status === "complete" ? "/investor" : "/onboarding/investor";
+  if (role === "founder") return status === "complete" ? "/founder/investors" : "/onboarding";
+  return status === "complete" ? "/investor/discover" : "/onboarding/investor";
 }
 
 function HomeScreen() {
@@ -56,9 +56,7 @@ function HomeScreen() {
   return (
     <div className="blueprint-surface grid min-h-screen place-items-center px-4 py-12">
       <div className="panel w-full max-w-xl px-6 py-10 sm:px-10">
-        <div className="blueprint-frame mb-8 inline-flex size-20 items-center justify-center">
-          <Logo size={52} />
-        </div>
+        <Logo size={64} className="mb-8" />
         <p className="text-meta">{mode === "signin" ? "Session restore" : "Account setup"}</p>
         <h1 className="mt-2 text-[1.75rem] leading-tight font-bold tracking-tight">
           {mode === "signin" ? "Sign in" : "Welcome to VentureOS"}

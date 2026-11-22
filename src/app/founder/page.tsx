@@ -1,15 +1,13 @@
 "use client";
 
-import { AppShell } from "@/components/app/shell";
-import { FounderDashboard } from "@/components/app/founder-dashboard";
-import { useStore } from "@/lib/store";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { BootScreen } from "@/components/brand/logo";
 
 export default function Page() {
-  const { founder } = useStore();
-  const first = founder?.founder.fullName.split(" ")[0] || "there";
-  return (
-    <AppShell role="founder" title={`Good to see you, ${first}`} subtitle="Your company profile and investor activity.">
-      <FounderDashboard />
-    </AppShell>
-  );
+  const router = useRouter();
+  useEffect(() => {
+    router.replace("/founder/investors");
+  }, [router]);
+  return <BootScreen />;
 }
