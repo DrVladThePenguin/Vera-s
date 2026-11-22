@@ -247,6 +247,27 @@ body {
   }
 }
 
+@keyframes loading-rail {
+  0% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(320%);
+  }
+}
+
+.loading-rail {
+  animation: loading-rail 1.25s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loading-rail {
+    animation: none;
+    width: 40%;
+    margin-inline: auto;
+  }
+}
+
 @keyframes grainient-fallback-shift {
   0%,
   100% {

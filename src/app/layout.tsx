@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, Inter, Mozilla_Text } from "next/font/google";
+import { ChunkRecovery } from "@/components/app/chunk-recovery";
 import { StoreProvider } from "@/lib/store";
 import "./globals.css";
 
@@ -31,6 +32,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body
         className={`${inter.variable} ${mozillaText.variable} ${plexMono.variable} font-sans antialiased`}
       >
+        <ChunkRecovery />
         <StoreProvider>{children}</StoreProvider>
       </body>
     </html>

@@ -27,11 +27,4 @@ export function Logo({
   );
 }
 
-export function BootScreen({ message = "Loading…" }: { message?: string }) {
-  return (
-    <div className="blueprint-surface flex min-h-screen flex-col items-center justify-center gap-4 px-4">
-      <Logo size={56} />
-      <p className="text-meta normal-case">{message}</p>
-    </div>
-  );
-}
+export { BootScreen } from "@/components/brand/loading-screen";
